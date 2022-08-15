@@ -1,0 +1,30 @@
+[
+  {
+    "namespace": "nativeExecutableAPI",
+    "functions": [
+      {
+        "name": "execute",
+        "type": "function",
+        "description": "Run a native executable with the specified parameters",
+        "async": true,
+        "parameters": [
+          {
+            "name": "executablePath",
+            "type": "string",
+            "description": "The absolute path to the native executable to run."
+          },
+          {
+            "name": "params",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The parameters for the executable"
+          }
+
+
+        ]
+      }
+    ]
+  }
+]

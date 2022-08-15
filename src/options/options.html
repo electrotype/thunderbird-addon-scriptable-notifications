@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" /> 
+    <title>Scriptable Notifications - Options</title>
+    <link rel="stylesheet" href="options.css">
+  </head>
+
+  <body>
+
+    <header>
+      <div>
+        <img src="../../assets/icons/icon-64.png" /> Scriptable Notifications - Options <img src="../../assets/icons/icon-64.png" />
+      </div>
+      <div id="getHelp">
+        <a href="https://github.com/electrotype/thunderbird-addon-scriptable-notifications" target="_blank">Get help</a>
+      </div>
+    </header>
+    <form>
+      <p>
+        <div class="sectionTitle">Path to the external script:</div>
+        <div>
+          <input type="text" id="executablePath" placeholder="/absolute/path/to/the/script" />
+        </div>
+      </p>
+
+      <p>
+        <div class="sectionTitle">Inbox folders to check for unread messages:</div>
+        <div>
+          <ul id="accounts"></ul>
+        </div>
+      </p>
+
+      <p id="btnsRow">
+        <button type="submit">Save</button>
+        <span id="savedMsg">Options saved!</span>
+      </p> 
+    </form>
+    <script src="options.js"></script>
+  </body>
+</html>

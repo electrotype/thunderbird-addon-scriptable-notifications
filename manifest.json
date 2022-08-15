@@ -1,0 +1,65 @@
+{
+  "manifest_version": 2,
+  "name": "Scriptable Notifications",
+  "description": "Allow you to use an external script to manage Thunderbird mails notifications",
+  "version": "1.0",
+  "author": "Electrotype",
+  "applications": {
+    "gecko": {
+      "id": "{271e72b1-166c-471b-bc06-41e03f176b15}",
+      "strict_min_version": "91.0",
+      "strict_max_version": "102.*"
+    }
+  },
+  "background": {
+    "scripts": [
+      "src/background.js"
+    ]
+  },
+  "permissions": [
+    "messagesRead",
+    "accountsRead",
+    "storage"
+  ],
+  "experiment_apis": {
+    "nativeExecutableAPI": {
+      "schema": "src/nativeExecutableAPI/schema.json",
+      "parent": {
+        "scopes": [
+          "addon_parent"
+        ],
+        "paths": [
+          [
+            "nativeExecutableAPI"
+          ]
+        ],
+        "script": "src/nativeExecutableAPI/implementation.js"
+      }
+    },
+    "utils": {
+      "schema": "src/utils/schema.json",
+      "parent": {
+        "scopes": [
+          "addon_parent"
+        ],
+        "paths": [
+          [
+            "utils"
+          ]
+        ],
+        "script": "src/utils/utils.js"
+      }
+    }
+  },
+  "options_ui": {
+    "page": "src/options/options.html",
+    "open_in_tab": true,
+    "browser_style": true,
+    "chrome_style": true
+  },
+  "icons": {
+      "16": "assets/icons/icon-16.png",
+      "32": "assets/icons/icon-32.png",
+      "64": "assets/icons/icon-64.png"
+  }
+}
