@@ -4,7 +4,7 @@ window.scrNoti = window.scrNoti || {};
 // On new email...
 //==========================================
 window.scrNoti.newEmailListener = async (folder, messages) => {
-  let hashNotJunk = false;
+  let hasNotJunk = false;
 
   if (!(await window.scrNoti.isFolderToCheck(folder))) {
     return;
@@ -13,17 +13,17 @@ window.scrNoti.newEmailListener = async (folder, messages) => {
   if (messages && messages.messages && messages.messages.length > 0) {
     for (const message of messages.messages) {
       if (message && !message.junk) {
-        hashNotJunk = true;
+        hasNotJunk = true;
         break;
       }
     }
   }
 
-  if (!hashNotJunk) {
+  if (!hasNotJunk) {
     return;
   }
 
-  await window.scrNoti.notifyExternalScript(true);
+  await window.scrNoti.notifyNativeScript(true);
 };
 browser.messages.onNewMailReceived.removeListener(
   window.scrNoti.newEmailListener
@@ -73,12 +73,12 @@ browser.messages.onDeleted.removeListener(
 browser.messages.onDeleted.addListener(window.scrNoti.messageDeletedListener);
 
 //==========================================
-// Check if there are unread messages and call the external
-// script if so.
+// Check if there are unread messages and call the native
+// script with the result.
 //==========================================
 window.scrNoti.runUnreadValidation = async () => {
   const hasUnreadMessages = await window.scrNoti.hasUnreadMessages();
-  await window.scrNoti.notifyExternalScript(hasUnreadMessages);
+  await window.scrNoti.notifyNativeScript(hasUnreadMessages);
 };
 
 //==========================================
@@ -103,22 +103,13 @@ window.scrNoti.hasUnreadMessages = async () => {
 };
 
 //==========================================
-// Notify the external script
+// Notify the native script
 //==========================================
-window.scrNoti.notifyExternalScript = async (hasUnreadMessages) => {
-  const param = hasUnreadMessages ? "true" : "false";
-  const externalScriptPath = await window.scrNoti.getExternalScriptPath();
-  await browser.nativeExecutableAPI.execute(externalScriptPath, [param]);
-};
-
-//==========================================
-// Get the path to the external script
-//==========================================
-window.scrNoti.getExternalScriptPath = async () => {
-  const { executablePath } = await messenger.storage.local.get({
-    executablePath: "",
-  });
-  return executablePath;
+window.scrNoti.notifyNativeScript = async (hasUnreadMessages) => {
+  await browser.runtime.sendNativeMessage(
+    "scriptableNotifications",
+    hasUnreadMessages
+  );
 };
 
 //==========================================
@@ -167,7 +158,6 @@ window.scrNoti.tryNbrTimes = async (fnct, nbrTime) => {
     try {
       await fnct();
     } catch (error) {
-      browser.utils.log("err fnc " + error);
       if (pos >= nbrTime) {
         throw error;
       }
@@ -184,19 +174,20 @@ window.scrNoti.tryNbrTimes = async (fnct, nbrTime) => {
 // On startup...
 //==========================================
 window.scrNoti.main = async () => {
-  const executablePath = await window.scrNoti.getExternalScriptPath();
-  if (!executablePath) {
-    const { optionsPageHasBeenShown } = await messenger.storage.local.get({
-      optionsPageHasBeenShown: false,
+  const { optionsPageHasBeenShown } = await messenger.storage.local.get({
+    optionsPageHasBeenShown: false,
+  });
+
+  if (!optionsPageHasBeenShown) {
+    await messenger.storage.local.set({
+      optionsPageHasBeenShown: true,
     });
+    await browser.runtime.openOptionsPage();
+    return;
+  }
 
-    if (!optionsPageHasBeenShown) {
-      await messenger.storage.local.set({
-        optionsPageHasBeenShown: true,
-      });
-      await browser.runtime.openOptionsPage();
-    }
-
+  const folderToCheck = await window.scrNoti.getFoldersToCheckForUnread();
+  if (folderToCheck.length < 1) {
     return;
   }
 

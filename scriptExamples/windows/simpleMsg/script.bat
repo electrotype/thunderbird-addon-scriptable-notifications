@@ -1,15 +1,7 @@
-@ECHO OFF
+@echo off
 
-REM Very, very basic example script for Windows to be called by the 
-REM "Scriptable Notifications" Thunderbird add-on.
-REM For a more interesting example, have a look at the "linux-kde" one.
-
-IF "%~1"=="true" GOTO unreadMessages
-
-MSG "%username%" Scriptable Notifications - No unread mails
-GOTO End
-
-:unreadMessages
-MSG "%username%" Scriptable Notifications - There are unread mails!
-
-:End
+REM Basic Windows script for the 
+REM "Scriptable Notifications" Thunderbird 
+REM add-on. 
+REM Python 2 or 3 needs to be installed.
+call python %~dp0\simpleNotification.py

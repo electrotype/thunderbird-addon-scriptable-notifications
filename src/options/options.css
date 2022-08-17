@@ -7,9 +7,36 @@ p {
   margin: 0 0 1em 0;
 }
 
+form {
+  margin-bottom: 4em;
+}
+
+input::placeholder {
+  color: #777777;
+  font-style: italic;
+}
+
 button {
   font-size: 1em;
   padding: 0.2em 1em;
+}
+button.smallBtn {
+  font-size: 1em;
+  padding: 0em 0.4em;
+}
+
+.downloadManifest {
+  margin-top: 0.4em;
+}
+
+code {
+  background-color: rgb(246, 246, 246);
+  font-style: italic;
+  color: #000000;
+  padding: 0.1em 0.3em;
+  font-family: 'Courier New', Courier, monospace;
+  border: solid 1px #111111;
+  word-break: break-all;
 }
 
 input[type=text] {
@@ -57,12 +84,13 @@ header img {
 .sectionTitle {
   background-color: rgb(103, 123, 140);
   color: #FFFFFF;
-  padding: 0.4em 0.2em;
+  padding: 0.4em 0.4em;
   font-size: 1.1em;
   margin-bottom: 0.2em;
+  font-weight: bold;
 }
 
-#executablePath {
+#scriptPath {
   margin-top: 0.4em;
 }
 
@@ -77,3 +105,33 @@ header img {
   text-align: center;
   font-size: 0.8em;
 }
+
+.tabBar {
+  text-align: center;
+  margin-top: 1em;
+}
+
+.tabBar .tab {
+  display: inline-block;
+  padding: 0.4em 2em;
+  border: solid #444444 2px;
+  border-bottom: 0;
+}
+
+.tabBar .tab:not(:first-child) {
+  margin-left: 0.4em;
+}
+
+.tabBar .tab:hover, .tabBar .tab.active {
+  background-color: #ffe7a5;
+  cursor: pointer;
+}
+
+.registerTabContent {
+  display: none;
+  margin: 1em 1em 0em 1em;
+  padding-left: 0.4em;
+  border-left: 0.4em solid #f5c12f;
+}
+
+
