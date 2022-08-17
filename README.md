@@ -48,7 +48,7 @@ If you install this add-on from the source:
    not in a subdirectory!).
 2. Open the `Add-ons Manager` tab in Thunderbird (`Tools / Add-ons and Themes / Extensions`).
 3. Drag and drop the .zip file. Confirm the installation.
-4. C0nfigure the options.
+4. Configure the options.
 
 ### Options
 
