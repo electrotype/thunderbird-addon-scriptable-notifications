@@ -36,6 +36,12 @@ a interesting solution and you don't have to write an external script.
 
 ### Installation
 
+#### From the Thunderbird add-ons site
+
+https://addons.thunderbird.net/en-US/thunderbird/addon/scriptable-notifications
+
+#### From source
+
 If you install this add-on from the source:
 
 1. Zip the whole project in a single file (the `manifest.json` must be at the _root_ of the zip file,
