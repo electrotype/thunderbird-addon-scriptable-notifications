@@ -95,7 +95,7 @@ On the "options" page of the add-on:
 
 Provided at: `scriptExamples/windows/simpleMsg/script.bat`.
 
-Very basic script, only display small alert messages.
+Very basic script, only displays small alert messages.
 
 Python 2 or 3 must be installed on the Windows machine.
 
@@ -106,7 +106,7 @@ be kept in the same directory as the `script.bat`.
 
 Provided at: `scriptExamples/linux/simpleMsg/script.sh`.
 
-Very basic script, only display small alert messages.
+Very basic script, only displays small alert messages.
 
 No external dependencies.
 
@@ -120,18 +120,18 @@ all messages are read, the script will remove the icon from the system tray.
 
 Python is required.
 
-The commande `aplay` must be available on the system for the sound to be played.
+The command `aplay` must be available on the system for the sound to be played.
 
 The library `libappindicator-gtk3` must be installed for Python to be
-able to add an icon in the system tray.
+able to add the icon to the system tray.
 
 The `scriptExamples/linux-kde/soundAndTrayIcon/showThunderbirdTrayIcon.py` and
 `scriptExamples/linux-kde/soundAndTrayIcon/tada.wav` files must be kept in the
-same directory as the`script.sh`.
+same directory as the`script.sh` script.
 
 ### Writing an external script
 
-- It is a good idea to start your own script from one provided in the
+- It is a good idea to start your script from one provided in the
   `scriptExamples` folder because the `Native messaging` protocole expects your
   script to read and write some data in a specific way.
 
@@ -143,17 +143,19 @@ same directory as the`script.sh`.
 
 - Your script must manage only one parameter: "`hasUnreadMessages`". This parameter
   will be "`true`" or "`false`" depending on whether the add-on sees unread messages or not in
-  the inboxes you have selected in the options.
+  the inboxes you have selected in the options. Note that this parameter is _not_ passed
+  as a command line argument, but using _stdin_.
 
 - Your script must be able to receive the _same_ value for the "`hasUnreadMessages`"
-  parameter more than once in a row. For example, if there are 3 unread messages:
+  parameter more than once in a row. For example, if there are 3 unread messages
+  in your selected inboxes:
 
   1. You read the first unread message. There are still two unread messages. Your
-     script is called with "`true`": `/path/to/script.sh true`.
+     script is called with "`true`"
   2. You read the second unread message. There are still one unread message. Your
-     script is _again_ called with "`true`": `/path/to/script.sh true`.
+     script is _again_ called with "`true`".
   3. You read the last unread message. There are no more unread messages! Your
-     script is now called with "`false`": `/path/to/script.sh false`.
+     script is now called with "`false`".
 
   In other words, it is up to you to decide whether you need to maintain a "state"
   on what your script is doing. As you can see in the example script "linux-kde",
