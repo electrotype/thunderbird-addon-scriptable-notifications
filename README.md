@@ -32,9 +32,13 @@ the action from a "Getting New Mail" filter. But there is no "No more unread mai
 icon once all mails have been read! This is why I created this little add-on.
 
 See also [Mailbox Alert](https://addons.thunderbird.net/en-US/thunderbird/addon/mailbox-alert) for
-a interesting solution and you don't have to write an external script.
+another notification solution where you don't have to write an external script.
 
 ### Installation
+
+Note that the add-on will not work with a _Snap_ or _Flatpak_ version of Thunderbird. Those
+currently don't seem to support Native Messaging at all!
+If you know how to fix this, please let me know.
 
 #### From the Thunderbird add-ons site
 
