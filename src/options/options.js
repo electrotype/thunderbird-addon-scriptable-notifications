@@ -1,54 +1,89 @@
 const isWindows = navigator.appVersion.indexOf("Win") > -1;
 const isMac = navigator.appVersion.indexOf("Mac") > -1;
+const foldersKeyToId = new Map();
 
 //==========================================
 // Build HTML form
 //==========================================
 const buildForm = async () => {
   const accounts = await browser.accounts.list(true);
-  const accountsList = document.querySelector("#accounts");
+  const accountsListEl = document.querySelector("#accounts");
   for (const account of accounts) {
-    let inboxFolder;
     for (const folder of account.folders) {
-      if (folder.type === "inbox") {
-        inboxFolder = folder;
-        break;
+      // All folders of a "Feed" account can be selected
+      // except the "trash" one.
+      if (account.type === "rss") {
+        if (folder.type !== "trash") {
+          await addFormFolder(accountsListEl, account, folder);
+        }
+      } else {
+        // Only the "inbox" of the mail account can be selected.
+        if (folder.type === "inbox") {
+          await addFormFolder(accountsListEl, account, folder);
+          break;
+        }
       }
     }
-    if (!inboxFolder) {
-      continue;
-    }
-
-    const folderLi = document.createElement("li");
-    accountsList.appendChild(folderLi);
-
-    const folderCheckbox = document.createElement("input");
-    folderLi.appendChild(folderCheckbox);
-    const checkboxId = inboxFolder.accountId;
-    folderCheckbox.setAttribute("type", "checkbox");
-    folderCheckbox.setAttribute("id", checkboxId);
-    folderCheckbox.setAttribute("class", "folderCheckbox");
-    folderCheckbox.setAttribute("data-folderObj", JSON.stringify(inboxFolder));
-
-    const folderLabel = document.createElement("label");
-    folderLi.appendChild(folderLabel);
-    folderLabel.setAttribute("for", checkboxId);
-
-    const folderTitleSpan = document.createElement("span");
-    folderLabel.appendChild(folderTitleSpan);
-    const folderTitleText = document.createTextNode(account.name);
-    folderTitleSpan.appendChild(folderTitleText);
-
-    const folderTitle2Span = document.createElement("span");
-    folderLabel.appendChild(folderTitle2Span);
-    const folderTitle2Text = document.createTextNode(" - Inbox");
-    folderTitle2Span.appendChild(folderTitle2Text);
   }
 
   if (isWindows) {
     document.querySelector("#scriptPath").placeholder =
       "C:\\absolute\\path\\to\\the\\script";
   }
+};
+
+const addFormFolder = async (accountsListEl, account, folder) => {
+  const checkboxId = `x${uuid()}`;
+  const checkboxKey = createFolderCheckboxKey(folder);
+  foldersKeyToId.set(checkboxKey, checkboxId);
+
+  const folderLi = document.createElement("li");
+  accountsListEl.appendChild(folderLi);
+
+  const folderCheckbox = document.createElement("input");
+  folderLi.appendChild(folderCheckbox);
+
+  folderCheckbox.setAttribute("type", "checkbox");
+  folderCheckbox.setAttribute("id", checkboxId);
+  folderCheckbox.setAttribute("class", "folderCheckbox");
+  folderCheckbox.setAttribute("data-folderObj", JSON.stringify(folder));
+  folderCheckbox.setAttribute("data-checkboxKey", checkboxKey);
+
+  const folderLabel = document.createElement("label");
+  folderLi.appendChild(folderLabel);
+  folderLabel.setAttribute("for", checkboxId);
+
+  const folderTitleSpan = document.createElement("span");
+  folderLabel.appendChild(folderTitleSpan);
+  const folderTitleText = document.createTextNode(account.name);
+  folderTitleSpan.appendChild(folderTitleText);
+
+  const folderTitle2Span = document.createElement("span");
+  folderLabel.appendChild(folderTitle2Span);
+
+  if (account.type === "rss") {
+    folderTitle2Span.appendChild(document.createTextNode(` / ${folder.name}`));
+
+    folderTitle2Span.appendChild(document.createTextNode(` - Feed`));
+  } else {
+    const inboxSpanText = document.createTextNode(` - Inbox`);
+    folderTitle2Span.appendChild(inboxSpanText);
+  }
+};
+
+const createFolderCheckboxKey = (folder) => {
+  const checkboxKey = `${folder.accountId}_${folder.path}`;
+  return checkboxKey;
+};
+
+// From https://stackoverflow.com/a/2117523/843699
+const uuid = () => {
+  return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
+    (
+      c ^
+      (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
+    ).toString(16)
+  );
 };
 
 const addListeners = async () => {
@@ -146,7 +181,13 @@ const restoreOptions = async () => {
   });
 
   for (const folder of foldersToCheck) {
-    document.querySelector("#" + folder.accountId).checked = true;
+    const checkboxKey = createFolderCheckboxKey(folder);
+    const checkboxid = foldersKeyToId.get(checkboxKey);
+
+    const checkboxEl = document.querySelector(`#${checkboxid}`);
+    if (checkboxEl) {
+      checkboxEl.checked = true;
+    }
   }
 
   if (isWindows) {

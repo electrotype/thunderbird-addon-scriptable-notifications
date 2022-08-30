@@ -80,7 +80,7 @@ On the "options" page of the add-on:
   can look at the console for potential errors:
   `Tools / Developer Tools / Error console`.
 
-- **`Inbox folders to check for unread messages`**
+- **`Inbox/Feeds folders to check for unread messages`**
   The _inbox_ folders of all accounts registered in Thunderbird are listed here.
   You select the ones for which you want the read/unread messages to be checked.
 
@@ -92,6 +92,8 @@ On the "options" page of the add-on:
   As you can see on one of the screenshots, I personally store messages from all my accounts in
   the global "Local folders". I just have to select this inbox in the options since all new
   mails will end up there.
+
+  Note that _Feeds_ accounts and their Subscriptions (`rss` / `atom`) are also supported.
 
 ### Sample scripts provided
 
