@@ -104,6 +104,26 @@ const addListeners = async () => {
     });
 
   document
+    .querySelector("#notifyScriptSimple")
+    .addEventListener("change", () => {
+      document.getElementById("notifyScriptTrue").disabled = false;
+      document.getElementById("notifyScriptFalse").disabled = false;
+      document.getElementById("notifyScriptNew").disabled = true;
+      document.getElementById("notifyScriptRead").disabled = true;
+      document.getElementById("notifyScriptDeleted").disabled = true;
+    });
+
+  document
+    .querySelector("#notifyScriptExtended")
+    .addEventListener("change", () => {
+      document.getElementById("notifyScriptTrue").disabled = true;
+      document.getElementById("notifyScriptFalse").disabled = true;
+      document.getElementById("notifyScriptNew").disabled = false;
+      document.getElementById("notifyScriptRead").disabled = false;
+      document.getElementById("notifyScriptDeleted").disabled = false;
+    });
+
+  document
     .querySelector("#notifyScriptTrue")
     .addEventListener("click", async () => {
       await sendTestToScript(true);
@@ -113,6 +133,24 @@ const addListeners = async () => {
     .querySelector("#notifyScriptFalse")
     .addEventListener("click", async () => {
       await sendTestToScript(false);
+    });
+
+  document
+    .querySelector("#notifyScriptNew")
+    .addEventListener("click", async () => {
+      await sendTestToScript("new");
+    });
+
+  document
+    .querySelector("#notifyScriptRead")
+    .addEventListener("click", async () => {
+      await sendTestToScript("read");
+    });
+
+  document
+    .querySelector("#notifyScriptDeleted")
+    .addEventListener("click", async () => {
+      await sendTestToScript("deleted");
     });
 
   document.querySelectorAll(".tab").forEach((tabEl) => {
@@ -135,10 +173,22 @@ const addListeners = async () => {
 // Send test to script
 //==========================================
 const sendTestToScript = async (hasUnreadMessages) => {
-  await browser.runtime.sendNativeMessage(
-    "scriptableNotifications",
-    hasUnreadMessages
-  );
+  switch (hasUnreadMessages) {
+    case "new":
+// TODO: hasUnreadMessage == "new"
+      break;
+    case "read":
+// TODO: hasUnreadMessage == "read"
+      break;
+    case "deleted":
+// TODO: hasUnreadMessage == "deleted"
+      break
+    default:
+      await browser.runtime.sendNativeMessage(
+        "scriptableNotifications",
+        hasUnreadMessages
+      );
+  };
 };
 
 //==========================================
@@ -156,8 +206,12 @@ const saveFolders = async () => {
     }
   }
 
+  // "simple" or "extended"
+  const scriptType = document.querySelector('input[name="notifyScriptType"]:checked').value;
+
   await messenger.storage.local.set({
     foldersToCheck: foldersToCheck,
+    scriptType: scriptType,
   });
 
   if (savedMsgTimeout) {
@@ -189,6 +243,31 @@ const restoreOptions = async () => {
       checkboxEl.checked = true;
     }
   }
+
+  const { scriptType } = await messenger.storage.local.get({
+    scriptType: "simple",
+  });
+
+  switch (scriptType) {
+    case "simple":
+      document.getElementById("notifyScriptSimple").checked = true;
+// BUG: Why isnt' that done automatically with the help of event listener "change"?
+      document.getElementById("notifyScriptTrue").disabled = false;
+      document.getElementById("notifyScriptFalse").disabled = false;
+      document.getElementById("notifyScriptNew").disabled = true;
+      document.getElementById("notifyScriptRead").disabled = true;
+      document.getElementById("notifyScriptDeleted").disabled = true;
+      break;
+    case "extended":
+      document.getElementById("notifyScriptExtended").checked = true;
+// BUG: Why isnt' that done automatically with the help of event listener "change"?
+      document.getElementById("notifyScriptTrue").disabled = true;
+      document.getElementById("notifyScriptFalse").disabled = true;
+      document.getElementById("notifyScriptNew").disabled = false;
+      document.getElementById("notifyScriptRead").disabled = false;
+      document.getElementById("notifyScriptDeleted").disabled = false;
+      break;
+  };
 
   if (isWindows) {
     document.querySelector("#tabWindows").click();
@@ -265,7 +344,7 @@ echo    "type": "stdio",>> %manifestPath%
 echo    "allowed_extensions": [ "{271e72b1-166c-471b-bc06-41e03f176b15}" ]>> %manifestPath%
 echo }>> %manifestPath%
 
-echo Manifest created successfully at: %manifestPath% 
+echo Manifest created successfully at: %manifestPath%
 echo.
 
 echo ==============================================
@@ -279,7 +358,7 @@ echo.
 echo ==============================================
 echo Result
 echo ==============================================
-echo All good! 
+echo All good!
 echo Your native script: ${scriptPath}
 echo should now be accessible from the Scriptable Notifications Thunderbird add-on.
 echo.

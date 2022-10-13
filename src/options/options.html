@@ -2,7 +2,7 @@
 
 <html>
   <head>
-    <meta charset="utf-8" /> 
+    <meta charset="utf-8" />
     <title>Scriptable Notifications - Options</title>
     <link rel="stylesheet" href="options.css">
   </head>
@@ -22,13 +22,16 @@
         <div class="sectionTitle">Native script</div>
         <p>
           <div>
-            <strong>1.</strong> Enter the path to your native <em>executable</em> script (bash/batch/etc).
-            This is the script this add-on will call with "<em>true</em>" or "<em>false</em>" depending on
-            if there are unread messages or not in the inboxes you will select below. You can find example scripts
-            <a href="https://github.com/electrotype/thunderbird-addon-scriptable-notifications/tree/main/scriptExamples" target="_blank">here</a>.
-            <div>
-              <input type="text" id="scriptPath" placeholder="/absolute/path/to/the/script" />
-            </div>
+            <strong>1.</strong> Enter the path to your native <em>executable</em> script (bash/batch/etc):
+            <p>
+              This is the script this add-on will call with "<em>true</em>" or "<em>false</em>"
+              depending on if there are unread messages or not in the inboxes you will select
+              below. You can find example scripts
+              <a href="https://github.com/electrotype/thunderbird-addon-scriptable-notifications/tree/main/scriptExamples" target="_blank">here</a>.
+              <div>
+                <input type="text" id="scriptPath" placeholder="/absolute/path/to/the/script" />
+              </div>
+            </p>
           </div>
         </p>
         <p>
@@ -43,7 +46,7 @@
           </div>
           <div id="registerTabContentLinux" class="registerTabContent">
             <p>
-              Download the resulting manifest and save it to: 
+              Download the resulting manifest and save it to:
               <code>~/.mozilla/native-messaging-hosts/scriptableNotifications.json</code>.
               Create the parent directories if required.
             </p>
@@ -51,13 +54,13 @@
               <button type="button" class="downloadManifest">Download Manifest</button>
             </p>
             <p>
-              Note: once the manifest has been generated and saved for the first time, you can 
+              Note: once the manifest has been generated and saved for the first time, you can
               edit it directly if you need to change the path to your native script.
             </p>
           </div>
           <div id="registerTabContentMac" class="registerTabContent">
             <p>
-              Download the resulting manifest and save it to: 
+              Download the resulting manifest and save it to:
               <code>~/Library/Application Support/Mozilla/NativeMessagingHosts/scriptableNotifications.json</code>.
               Create the parent directories if required.
             </p>
@@ -65,7 +68,7 @@
               <button type="button" class="downloadManifest">Download Manifest</button>
             </p>
             <p>
-              Note: once the manifest has been generated and saved for the first time, you can 
+              Note: once the manifest has been generated and saved for the first time, you can
               edit it directly if you need to change the path to your native script.
             </p>
           </div>
@@ -79,17 +82,42 @@
             </p>
           </div>
         </p>
-      </p>
-      <p>
-        <div class="sectionTitle">Test your script</div>
         <p>
-          Test your script by sending "true" to simulate that there are unread messages or "false"
-          to simulate there are no more. Also make sure your script reacts properly if more than
-          one "true" or more than one "false" are sent in a row.
-        </p>
-        <p>
-          <button type="button" class="smallBtn" id="notifyScriptTrue">true</button>
-          <button type="button" class="smallBtn" id="notifyScriptFalse">false</button>
+          <div>
+            <strong>3.</strong> Select type of data sent to the script (bash/batch/etc):
+            <p>
+              <input type="radio" id="notifyScriptSimple" name="notifyScriptType" value="simple" checked="checked">
+              <label for="notifyScriptSimple">
+                Simple:
+                <br/>
+                If there are unread messages, the script receives a "true" whenever a new message
+                is received, read or deleted, otherwise a "false", if there are no new messages.
+                The script must react properly if more than one "true" or "false" are sent in a
+                row.
+              </label>
+            </p>
+            <p>
+              Test:
+              <button type="button" class="smallBtn" id="notifyScriptTrue">true</button>
+              <button type="button" class="smallBtn" id="notifyScriptFalse">false</button>
+            </p>
+            <p>
+              <input type="radio" id="notifyScriptExtended" name="notifyScriptType" value="extended">
+              <label for="notifyScriptExtended">
+                Extended:
+                <br/>
+                For each new, read or deleted message, the script receives some information about
+                the message (sender, receiver, subject, date received, mailbox and the new status)
+                beside the overall number and the number of unread messages for each watched inbox.
+              </label>
+            </p>
+            <p>
+              Test:
+              <button type="button" class="smallBtn" id="notifyScriptNew">New message</button>
+              <button type="button" class="smallBtn" id="notifyScriptRead">Message read</button>
+              <button type="button" class="smallBtn" id="notifyScriptDeleted">Message deleted</button>
+            </p>
+          </div>
         </p>
       </p>
       <p>
@@ -102,7 +130,7 @@
       <p id="btnsRow">
         <button type="button" id="saveFolders">Save</button>
         <span id="savedMsg">Options saved!</span>
-      </p> 
+      </p>
     </form>
     <script src="options.js"></script>
   </body>
