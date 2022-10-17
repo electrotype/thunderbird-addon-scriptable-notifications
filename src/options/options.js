@@ -87,8 +87,8 @@ const uuid = () => {
 };
 
 const addListeners = async () => {
-  document.querySelector("#saveFolders").addEventListener("click", () => {
-    saveFolders();
+  document.querySelector("#saveOptions").addEventListener("click", () => {
+    saveOptions();
   });
 
   document.querySelectorAll(".downloadManifest").forEach((btnEl) => {
@@ -195,7 +195,7 @@ const sendTestToScript = async (hasUnreadMessages) => {
 // Save folders
 //==========================================
 let savedMsgTimeout;
-const saveFolders = async () => {
+const saveOptions = async () => {
   const foldersToCheck = [];
   const folderCheckboxesEl = document.getElementsByClassName("folderCheckbox");
   for (const folderCheckboxEl of folderCheckboxesEl) {
