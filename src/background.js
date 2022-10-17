@@ -177,7 +177,7 @@ window.scrNoti.notifyNativeScript = async (message, event) => {
       };
 
       // Message data
-      if (event == "start") {
+      if (event == "start" || event == "quit") {
         messageDetails = null;
       } else {
         const folder = message.folder;
