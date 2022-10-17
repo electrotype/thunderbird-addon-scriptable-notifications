@@ -48,13 +48,13 @@ window.scrNoti.messageOnUpdatedListener = async (
   }
 
   if (changedProperties.read) {
-    // We add the message id to the seenMessages, because we do not want this
-    // message to show up as new
-    seenMessages[message.folder].add(message.id);
-  } else {
     // We keep the message id in the seenMessages until we delete the message
     // seenMessages[message.folder].delete(message.id);
     await window.scrNoti.notifyNativeScript(message, "read");
+  } else {
+    // We add the message id to the seenMessages, because we do not want this
+    // message to show up as new
+    seenMessages[message.folder].add(message.id);
   }
 };
 browser.messages.onUpdated.removeListener(
