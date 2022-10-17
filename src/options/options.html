@@ -19,7 +19,10 @@
     </header>
     <form>
       <p>
-        <div class="sectionTitle">Native script</div>
+        <div class="sectionTitle" id="nativescript_header">
+          Native script and manifest
+          <span id="rightarrow" style="display: none;">▶</span><span id="downarrow">▼</span></div>
+        <div id="nativescript">
         <p>
           <div>
             <strong>1.</strong> Enter the path to your native <em>executable</em> script (bash/batch/etc):
@@ -82,13 +85,30 @@
             </p>
           </div>
         </p>
+        </div>
+        <script>
+          document.getElementById("nativescript_header").onclick = function () {
+            var x = document.getElementById("nativescript");
+            if (x.style.display === "none") {
+              x.style.display = "block";
+              document.getElementById("rightarrow").style.display = "none";
+              document.getElementById("downarrow").style.display = "inline";
+            } else {
+              x.style.display = "none";
+              document.getElementById("rightarrow").style.display = "inline";
+              document.getElementById("downarrow").style.display = "none";
+            }
+          }
+        </script>
+      </p>
+      <p>
+        <div class="sectionTitle">Select type of data sent to the native script</div>
         <p>
           <div>
-            <strong>3.</strong> Select type of data sent to the script (bash/batch/etc):
             <p>
               <input type="radio" id="notifyScriptSimple" name="notifyScriptType" value="simple" checked="checked">
               <label for="notifyScriptSimple">
-                Simple:
+                <strong>Simple</strong>
                 <br/>
                 If there are unread messages, the script receives a "true" whenever a new message
                 is received, read or deleted, otherwise a "false", if there are no new messages.
@@ -104,7 +124,7 @@
             <p>
               <input type="radio" id="notifyScriptExtended" name="notifyScriptType" value="extended">
               <label for="notifyScriptExtended">
-                Extended:
+                <strong>Extended</strong>
                 <br/>
                 For each new, read or deleted message, the script receives some information about
                 the message (sender, receiver, subject, date received, mailbox and the new status)
