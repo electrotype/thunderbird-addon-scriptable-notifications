@@ -19,7 +19,6 @@ window.scrNoti.newEmailListener = async (folder, messages) => {
     for (const message of messages.messages) {
       if (message && !message.junk) {
         if (!seenMessages[folder].has(message.id)) {
-console.log("ScriN NEW MESSAGE", message);
           seenMessages[folder].add(message.id);
           await window.scrNoti.notifyNativeScript(message, "new");
           return;
@@ -40,7 +39,7 @@ window.scrNoti.messageOnUpdatedListener = async (
   message,
   changedProperties
 ) => {
-  if (!changedProperties.read || message.junk) {
+  if (message.junk) {
     return;
   }
 
@@ -48,9 +47,15 @@ window.scrNoti.messageOnUpdatedListener = async (
     return;
   }
 
-  // We keep the message id in the seenMessage until we delete the message
-  // seenMessages[message.folder].delete(message.id);
-  await window.scrNoti.notifyNativeScript(message, "read");
+  if (changedProperties.read) {
+    // We add the message id to the seenMessages, because we do not want this
+    // message to show up as new
+    seenMessages[message.folder].add(message.id);
+  } else {
+    // We keep the message id in the seenMessages until we delete the message
+    // seenMessages[message.folder].delete(message.id);
+    await window.scrNoti.notifyNativeScript(message, "read");
+  }
 };
 browser.messages.onUpdated.removeListener(
   window.scrNoti.messageOnUpdatedListener
