@@ -172,21 +172,23 @@ const addListeners = async () => {
 //==========================================
 // Send test to script
 //==========================================
-const sendTestToScript = async (hasUnreadMessages) => {
-  switch (hasUnreadMessages) {
+const sendTestToScript = async (event) => {
+  switch (event) {
+    case "start":
+// TODO: event == "start"
     case "new":
-// TODO: hasUnreadMessage == "new"
+// TODO: event == "new"
       break;
     case "read":
-// TODO: hasUnreadMessage == "read"
+// TODO: event == "read"
       break;
     case "deleted":
-// TODO: hasUnreadMessage == "deleted"
+// TODO: event == "deleted"
       break
     default:
       await browser.runtime.sendNativeMessage(
         "scriptableNotifications",
-        hasUnreadMessages
+        event
       );
   };
 };
