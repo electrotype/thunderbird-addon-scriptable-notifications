@@ -1,32 +1,32 @@
 window.scrNoti = window.scrNoti || {};
+const seenMessages = {};
+
+// TODO:
+// onQuit
+// mark read?
+// Update seenMessages when changing settings: simple/extended and folders
 
 //==========================================
 // On new email...
 //==========================================
 window.scrNoti.newEmailListener = async (folder, messages) => {
-//  let hasNotJunk = false;
 
   if (!(await window.scrNoti.isFolderToCheck(folder))) {
     return;
   }
 
-// FIXME
-//  if (messages && messages.messages && messages.messages.length > 0) {
-//    for (const message of messages.messages) {
-//      if (message && !message.junk) {
-//        await window.scrNoti.notifyNativeScript(message, "new");
-//// TODO: Why can't it just "return;"?
-////        hasNotJunk = true;
-////        break;
-//      }
-//    }
-//  }
-
-//  if (!hasNotJunk) {
-//    return;
-//  }
-//
-//  await window.scrNoti.notifyNativeScript(true);
+  if (messages && messages.messages && messages.messages.length > 0) {
+    for (const message of messages.messages) {
+      if (message && !message.junk) {
+        if (!seenMessages[folder].has(message.id)) {
+console.log("ScriN NEW MESSAGE", message);
+          seenMessages[folder].add(message.id);
+          await window.scrNoti.notifyNativeScript(message, "new");
+          return;
+        }
+      }
+    }
+  }
 };
 browser.messages.onNewMailReceived.removeListener(
   window.scrNoti.newEmailListener
@@ -48,6 +48,8 @@ window.scrNoti.messageOnUpdatedListener = async (
     return;
   }
 
+  // We keep the message id in the seenMessage until we delete the message
+  // seenMessages[message.folder].delete(message.id);
   await window.scrNoti.notifyNativeScript(message, "read");
 };
 browser.messages.onUpdated.removeListener(
@@ -65,6 +67,7 @@ window.scrNoti.messageDeletedListener = async (messagesObj) => {
     }
 
     if (!message.junk && !message.read) {
+      seenMessages[message.folder].delete(message.id);
       await window.scrNoti.notifyNativeScript(message, "deleted");
     }
   }
@@ -247,6 +250,24 @@ window.scrNoti.isFolderToCheck = async (folder) => {
 };
 
 //==========================================
+// List all messages in a folder
+//==========================================
+async function* listMessages(folder) {
+  let page = await messenger.messages.list(folder);
+  for (let message of page.messages) {
+    yield message;
+  }
+
+  while (page.id) {
+    page = await messenger.messages.continueList(page.id);
+    for (let message of page.messages) {
+      yield message;
+    }
+  }
+};
+window.scrNoti.listMessages = listMessages;
+
+//==========================================
 // Retry calling the specified function for X times
 // until there are no error, sleeping one second
 // between each call.
@@ -287,9 +308,19 @@ window.scrNoti.main = async () => {
     return;
   }
 
-  const folderToCheck = await window.scrNoti.getFoldersToCheckForUnread();
-  if (folderToCheck.length < 1) {
+  const foldersToCheck = await window.scrNoti.getFoldersToCheckForUnread();
+  if (foldersToCheck.length < 1) {
     return;
+  }
+  for (const folderToCheck of foldersToCheck) {
+    const seen = new Set();
+    for await (const message of listMessages(folderToCheck)) {
+      if (!message.junk && !message.read) {
+        seen.add(message.id);
+      }
+    }
+    // Save it
+    seenMessages[folderToCheck] = seen;
   }
 
   window.scrNoti.notifyNativeScript(null, "start");
