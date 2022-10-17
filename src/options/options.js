@@ -244,6 +244,16 @@ const restoreOptions = async () => {
     }
   }
 
+  const { optionsPageHasBeenShown } = await messenger.storage.local.get({
+    optionsPageHasBeenShown: false,
+  });
+
+  if (!optionsPageHasBeenShown) {
+    document.getElementById("nativescript").style.display = "block";
+    document.getElementById("nativescriptRightarrow").style.display = "none";
+    document.getElementById("nativescriptDownarrow").style.display = "inline";
+  }
+
   const { scriptType } = await messenger.storage.local.get({
     scriptType: "simple",
   });

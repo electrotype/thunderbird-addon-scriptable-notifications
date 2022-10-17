@@ -90,6 +90,10 @@ header img {
   font-weight: bold;
 }
 
+#nativescriptHeader {
+  cursor: pointer;
+}
+
 #scriptPath {
   margin-top: 0.4em;
 }
@@ -133,5 +137,3 @@ header img {
   padding-left: 0.4em;
   border-left: 0.4em solid #f5c12f;
 }
-
-

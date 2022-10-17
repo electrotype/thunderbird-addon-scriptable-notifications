@@ -19,10 +19,10 @@
     </header>
     <form>
       <p>
-        <div class="sectionTitle" id="nativescript_header">
+        <div class="sectionTitle" id="nativescriptHeader">
           Native script and manifest
-          <span id="rightarrow" style="display: none;">▶</span><span id="downarrow">▼</span></div>
-        <div id="nativescript">
+          <span id="nativescriptRightarrow" style="display: inline;">▶</span><span id="nativescriptDownarrow" style="display: none;">▼</span></div>
+        <div id="nativescript" style="display: none;">
         <p>
           <div>
             <strong>1.</strong> Enter the path to your native <em>executable</em> script (bash/batch/etc):
@@ -87,16 +87,16 @@
         </p>
         </div>
         <script>
-          document.getElementById("nativescript_header").onclick = function () {
+          document.getElementById("nativescriptHeader").onclick = function () {
             var x = document.getElementById("nativescript");
             if (x.style.display === "none") {
               x.style.display = "block";
-              document.getElementById("rightarrow").style.display = "none";
-              document.getElementById("downarrow").style.display = "inline";
+              document.getElementById("nativescriptRightarrow").style.display = "none";
+              document.getElementById("nativescriptDownarrow").style.display = "inline";
             } else {
               x.style.display = "none";
-              document.getElementById("rightarrow").style.display = "inline";
-              document.getElementById("downarrow").style.display = "none";
+              document.getElementById("nativescriptRightarrow").style.display = "inline";
+              document.getElementById("nativescriptDownarrow").style.display = "none";
             }
           }
         </script>
