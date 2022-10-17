@@ -48,12 +48,13 @@ window.scrNoti.messageOnUpdatedListener = async (
   }
 
   if (changedProperties.read) {
-    // We keep the message id in the seenMessages until we delete the message
+    // We keep the message id in the seenMessages until we delete the message, so that the
+    // message does not show up again as new
     // seenMessages[message.folder].delete(message.id);
     await window.scrNoti.notifyNativeScript(message, "read");
   } else {
     // We add the message id to the seenMessages, because we do not want this
-    // message to show up as new
+    // message to show up again as new
     seenMessages[message.folder].add(message.id);
   }
 };
@@ -77,9 +78,9 @@ window.scrNoti.messageDeletedListener = async (messagesObj) => {
 
     seenMessages[message.folder].delete(message.id);
     if (!message.read) {
-// FIXME: Do we ever reach this branch, because the message flag "read" is cleared and as such
-// the messageOnUpdatedListener is called before this listener? The external script hence never
-// sees a "deleted" event!
+// FIXME: Do we ever reach this branch, because the message flag "read" is set before deleting
+// the message and as such the messageOnUpdatedListener is called before this listener? The
+// external script hence never sees a "deleted" event!
 // Can we rely on this?
       await window.scrNoti.notifyNativeScript(message, "deleted");
     }
