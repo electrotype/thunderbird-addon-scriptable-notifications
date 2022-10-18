@@ -15,13 +15,15 @@ window.scrNoti.newEmailListener = async (folder, messages) => {
     return;
   }
 
+  // Find new messages, which have not been seen yet
   if (messages && messages.messages && messages.messages.length > 0) {
     for (const message of messages.messages) {
       if (message && !message.junk) {
         if (!seenMessages[folder].has(message.id)) {
           seenMessages[folder].add(message.id);
           await window.scrNoti.notifyNativeScript(message, "new");
-          return;
+          // If we could rely, that there is just one new message, we could return here
+          // return;
         }
       }
     }
