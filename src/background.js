@@ -19,8 +19,8 @@ window.scrNoti.newEmailListener = async (folder, messages) => {
   if (messages && messages.messages && messages.messages.length > 0) {
     for (const message of messages.messages) {
       if (message && !message.junk) {
-        if (!seenMessages[folder].has(message.id)) {
-          seenMessages[folder].add(message.id);
+        if (!seenMessages[folder.accountId + folder.path].has(message.id)) {
+          seenMessages[folder.accountId + folder.path].add(message.id);
           await window.scrNoti.notifyNativeScript(message, "new");
           // If we could rely, that there is just one new message, we could return here
           // return;
@@ -52,12 +52,12 @@ window.scrNoti.messageOnUpdatedListener = async (
   if (changedProperties.read) {
     // We keep the message id in the seenMessages until we delete the message, so that the
     // message does not show up again as new
-    // seenMessages[message.folder].delete(message.id);
+    // seenMessages[message.folder.accountId + message.folder.path].delete(message.id);
     await window.scrNoti.notifyNativeScript(message, "read");
   } else {
     // We add the message id to the seenMessages, because we do not want this
     // message to show up again as new
-    seenMessages[message.folder].add(message.id);
+    seenMessages[message.folder.accountId + message.folder.path].add(message.id);
   }
 };
 browser.messages.onUpdated.removeListener(
@@ -78,7 +78,7 @@ window.scrNoti.messageDeletedListener = async (messagesObj) => {
       continue;
     }
 
-    seenMessages[message.folder].delete(message.id);
+    seenMessages[message.folder.accountId + message.folder.path].delete(message.id);
     if (!message.read) {
 // FIXME: Do we ever reach this branch, because the message flag "read" is set before deleting
 // the message and as such the messageOnUpdatedListener is called before this listener? The
@@ -183,6 +183,7 @@ window.scrNoti.notifyNativeScript = async (message, event) => {
           totalMessageCount: folderInfo.totalMessageCount,
           type: folder.type,
           unreadMessageCount: folderInfo.unreadMessageCount,
+          seenMessageCount: seenMessages[folder.accountId + folder.path].size,
         };
         foldersList.push(folderData);
       };
@@ -336,7 +337,8 @@ window.scrNoti.main = async () => {
       }
     }
     // Save it
-    seenMessages[folderToCheck] = seen;
+    seenMessages[folderToCheck.accountId + folderToCheck.path] = seen;
+console.log("ScriN", seenMessages);
   }
 
   window.scrNoti.notifyNativeScript(null, "start");
