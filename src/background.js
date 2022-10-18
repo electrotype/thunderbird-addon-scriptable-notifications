@@ -338,7 +338,6 @@ window.scrNoti.main = async () => {
     }
     // Save it
     seenMessages[folderToCheck.accountId + folderToCheck.path] = seen;
-console.log("ScriN", seenMessages);
   }
 
   window.scrNoti.notifyNativeScript(null, "start");
