@@ -146,9 +146,8 @@ window.scrNoti.notifyNativeScript = async (message, event) => {
     case "extended":
       // List of all accounts
       const accounts = await messenger.accounts.list(false);
-      const accountsList = [];
+      const accountsList = {};
       for (const account of accounts) {
-
         const identitiesList = [];
         for (const identity of account.identities) {
           const mailIdentity = {
@@ -161,12 +160,11 @@ window.scrNoti.notifyNativeScript = async (message, event) => {
         };
 
         const mailAccount = {
-          id: account.id,
           identities: identitiesList,
           name: account.name,
           type: account.type,
         };
-        accountsList.push(mailAccount);
+        accountsList[account.id] = mailAccount;
       };
 
       // List of all folders, which should be included
