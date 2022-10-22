@@ -66,34 +66,6 @@ browser.messages.onUpdated.removeListener(
 browser.messages.onUpdated.addListener(window.scrNoti.messageOnUpdatedListener);
 
 //==========================================
-// On message deleted...
-//==========================================
-window.scrNoti.messageDeletedListener = async (messagesObj) => {
-  for (const message of messagesObj.messages) {
-    if (message.junk) {
-      continue;
-    }
-
-    if (!(await window.scrNoti.isFolderToCheck(message.folder))) {
-      continue;
-    }
-
-    seenMessages[message.folder.accountId + message.folder.path].delete(message.id);
-    if (!message.read) {
-// FIXME: Do we ever reach this branch, because the message flag "read" is set before deleting
-// the message and as such the messageOnUpdatedListener is called before this listener? The
-// external script hence never sees a "deleted" event!
-// Can we rely on this?
-      await window.scrNoti.notifyNativeScript(message, "deleted");
-    }
-  }
-};
-browser.messages.onDeleted.removeListener(
-  window.scrNoti.messageDeletedListener
-);
-browser.messages.onDeleted.addListener(window.scrNoti.messageDeletedListener);
-
-//==========================================
 // Any unread messages?
 //==========================================
 window.scrNoti.hasUnreadMessages = async () => {
