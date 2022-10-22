@@ -211,7 +211,7 @@ const sendTestToScript = async (event) => {
 };
 
 //==========================================
-// Save folders
+// Save options
 //==========================================
 let savedMsgTimeout;
 const saveOptions = async () => {
