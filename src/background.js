@@ -17,11 +17,22 @@ window.scrNoti.newEmailListener = async (folder, messages) => {
 
   // Find new messages, which have not been seen yet
   if (messages && messages.messages && messages.messages.length > 0) {
+
+    let sent = false;
+    const { scriptType } = await messenger.storage.local.get({
+      scriptType: "simple",
+    });
+
     for (const message of messages.messages) {
       if (message && !message.junk) {
         if (!seenMessages[folder.accountId + folder.path].has(message.id)) {
+          if (!sent) {
+            await window.scrNoti.notifyNativeScript(message, "new");
+            if (scriptType == "simple") {
+              sent = true;
+            }
+          }
           seenMessages[folder.accountId + folder.path].add(message.id);
-          await window.scrNoti.notifyNativeScript(message, "new");
           // If we could rely, that there is just one new message, we could return here
           // return;
         }
