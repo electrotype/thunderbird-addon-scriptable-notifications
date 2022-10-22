@@ -167,6 +167,21 @@ const addListeners = async () => {
       document.querySelector("#" + contenId).style.display = "block";
     });
   });
+
+  document
+    .querySelector("#nativescriptHeader")
+    .addEventListener("click", () => {
+      var x = document.getElementById("nativescript");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+        document.getElementById("nativescriptRightarrow").style.display = "none";
+        document.getElementById("nativescriptDownarrow").style.display = "inline";
+      } else {
+        x.style.display = "none";
+        document.getElementById("nativescriptRightarrow").style.display = "inline";
+        document.getElementById("nativescriptDownarrow").style.display = "none";
+      };
+    });
 };
 
 //==========================================
