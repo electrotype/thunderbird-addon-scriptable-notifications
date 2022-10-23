@@ -18,23 +18,19 @@ window.scrNoti.newEmailListener = async (folder, messages) => {
   // Find new messages, which have not been seen yet
   if (messages && messages.messages && messages.messages.length > 0) {
 
-    let sent = false;
     const { scriptType } = await messenger.storage.local.get({
       scriptType: "simple",
     });
 
     for (const message of messages.messages) {
       if (message && !message.junk) {
+        if (scriptType == "simple") {
+          await window.scrNoti.notifyNativeScript(message, "new");
+          return;
+        }
         if (!seenMessages[folder.accountId + folder.path].has(message.id)) {
-          if (!sent) {
-            await window.scrNoti.notifyNativeScript(message, "new");
-            if (scriptType == "simple") {
-              sent = true;
-            }
-          }
+          await window.scrNoti.notifyNativeScript(message, "new");
           seenMessages[folder.accountId + folder.path].add(message.id);
-          // If we could rely, that there is just one new message, we could return here
-          // return;
         }
       }
     }
@@ -61,14 +57,18 @@ window.scrNoti.messageOnUpdatedListener = async (
   }
 
   if (changedProperties.read) {
-    // We keep the message id in the seenMessages until we delete the message, so that the
-    // message does not show up again as new
-    // seenMessages[message.folder.accountId + message.folder.path].delete(message.id);
+    // We keep the message id in the seenMessages until we delete the message,
+    // so that the message does not show up again as new
     await window.scrNoti.notifyNativeScript(message, "read");
   } else {
-    // We add the message id to the seenMessages, because we do not want this
-    // message to show up again as new
-    seenMessages[message.folder.accountId + message.folder.path].add(message.id);
+    const { scriptType } = await messenger.storage.local.get({
+      scriptType: "simple",
+    });
+    if (scriptType != "simple") {
+      // We add the message id to the seenMessages, because we do not want this
+      // message to show up again as new
+      seenMessages[message.folder.accountId + message.folder.path].add(message.id);
+    }
   }
 };
 browser.messages.onUpdated.removeListener(
@@ -310,15 +310,21 @@ window.scrNoti.main = async () => {
   if (foldersToCheck.length < 1) {
     return;
   }
-  for (const folderToCheck of foldersToCheck) {
-    const seen = new Set();
-    for await (const message of listMessages(folderToCheck)) {
-      if (!message.junk && !message.read) {
-        seen.add(message.id);
+
+  const { scriptType } = await messenger.storage.local.get({
+    scriptType: "simple",
+  });
+  if (scriptType != "simple") {
+    for (const folderToCheck of foldersToCheck) {
+      const seen = new Set();
+      for await (const message of listMessages(folderToCheck)) {
+        if (!message.junk && !message.read) {
+          seen.add(message.id);
+        }
       }
+      // Save it
+      seenMessages[folderToCheck.accountId + folderToCheck.path] = seen;
     }
-    // Save it
-    seenMessages[folderToCheck.accountId + folderToCheck.path] = seen;
   }
 
   window.scrNoti.notifyNativeScript(null, "start");
