@@ -271,6 +271,9 @@ const restoreOptions = async () => {
     document.getElementById("nativescript").style.display = "block";
     document.getElementById("nativescriptRightarrow").style.display = "none";
     document.getElementById("nativescriptDownarrow").style.display = "inline";
+    await messenger.storage.local.set({
+      optionsPageHasBeenShown: true,
+    });
   }
 
   const { scriptType } = await messenger.storage.local.get({

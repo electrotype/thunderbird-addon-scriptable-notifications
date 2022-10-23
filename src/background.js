@@ -299,9 +299,6 @@ window.scrNoti.main = async () => {
   });
 
   if (!optionsPageHasBeenShown) {
-    await messenger.storage.local.set({
-      optionsPageHasBeenShown: true,
-    });
     await browser.runtime.openOptionsPage();
     return;
   }
