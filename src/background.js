@@ -274,7 +274,6 @@ window.scrNoti.listMessages = listMessages;
 window.scrNoti.tryNbrTimes = async (fnct, nbrTime) => {
   async function tryNbrTimesInner(pos) {
     try {
-// BUG: Sometimes I get "TypeError: fnct is not a function"
       await fnct();
     } catch (error) {
       if (pos >= nbrTime) {
