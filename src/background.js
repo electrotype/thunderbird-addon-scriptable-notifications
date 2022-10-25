@@ -290,6 +290,34 @@ window.scrNoti.tryNbrTimes = async (fnct, nbrTime) => {
 };
 
 //==========================================
+// Store all unread messages in global variable 'seenMessages'.
+//==========================================
+window.scrNoti.updateSeenMessages = async () => {
+  const { scriptType } = await messenger.storage.local.get({
+    scriptType: "simple",
+  });
+  if (scriptType == "simple") {
+    return;
+  }
+
+  const foldersToCheck = await window.scrNoti.getFoldersToCheckForUnread();
+  if (foldersToCheck.length < 1) {
+    return;
+  }
+
+  for (const folderToCheck of foldersToCheck) {
+    const seen = new Set();
+    for await (const message of listMessages(folderToCheck)) {
+      if (!message.junk && !message.read) {
+        seen.add(message.id);
+      }
+    }
+    // Save it
+    seenMessages[folderToCheck.accountId + folderToCheck.path] = seen;
+  }
+};
+
+//==========================================
 // On startup...
 //==========================================
 window.scrNoti.main = async () => {
@@ -307,22 +335,7 @@ window.scrNoti.main = async () => {
     return;
   }
 
-  const { scriptType } = await messenger.storage.local.get({
-    scriptType: "simple",
-  });
-  if (scriptType != "simple") {
-    for (const folderToCheck of foldersToCheck) {
-      const seen = new Set();
-      for await (const message of listMessages(folderToCheck)) {
-        if (!message.junk && !message.read) {
-          seen.add(message.id);
-        }
-      }
-      // Save it
-      seenMessages[folderToCheck.accountId + folderToCheck.path] = seen;
-    }
-  }
-
-  window.scrNoti.notifyNativeScript(null, "start");
+  await window.scrNoti.updateSeenMessages();
+  await window.scrNoti.notifyNativeScript(null, "start");
 };
 document.addEventListener("DOMContentLoaded", window.scrNoti.main);
