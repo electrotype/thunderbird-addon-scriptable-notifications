@@ -108,6 +108,7 @@ const addListeners = async () => {
     .addEventListener("change", () => {
       document.getElementById("notifyScriptTrue").disabled = false;
       document.getElementById("notifyScriptFalse").disabled = false;
+      document.getElementById("notifyScriptStart").disabled = true;
       document.getElementById("notifyScriptNew").disabled = true;
       document.getElementById("notifyScriptRead").disabled = true;
       document.getElementById("notifyScriptDeleted").disabled = true;
@@ -118,6 +119,7 @@ const addListeners = async () => {
     .addEventListener("change", () => {
       document.getElementById("notifyScriptTrue").disabled = true;
       document.getElementById("notifyScriptFalse").disabled = true;
+      document.getElementById("notifyScriptStart").disabled = false;
       document.getElementById("notifyScriptNew").disabled = false;
       document.getElementById("notifyScriptRead").disabled = false;
       document.getElementById("notifyScriptDeleted").disabled = false;
@@ -133,6 +135,12 @@ const addListeners = async () => {
     .querySelector("#notifyScriptFalse")
     .addEventListener("click", async () => {
       await sendTestToScript(false);
+    });
+
+  document
+    .querySelector("#notifyScriptStart")
+    .addEventListener("click", async () => {
+      await sendTestToScript("start");
     });
 
   document
@@ -188,17 +196,78 @@ const addListeners = async () => {
 // Send test to script
 //==========================================
 const sendTestToScript = async (event) => {
+  const payload = {
+    "accounts": [
+      {"id": "account1",
+       "identities": [],
+       "name": "Local Folders",
+       "type": "none"},
+      {"id": "account2",
+       "identities": [
+          {"email": "name.surname@company.com",
+           "label": "",
+           "name": "Name Surname",
+           "organization": "Company"}],
+       "name": "Business",
+       "type": "imap"},
+      {"id": "account3",
+       "identities": [
+          {"email": "name@private.net",
+           "label": "",
+           "name": "Name Surname",
+           "organization": ""},
+          {"email": "name.surname@private.net",
+           "label": "",
+           "name": "Name Surname",
+           "organization": ""}],
+       "name": "Private",
+       "type": "imap"}],
+    "folders": [
+      {"accountId": "account2",
+       "favorite": true,
+       "name": "Inbox",
+       "path": "/INBOX",
+       "totalMessageCount": 74,
+       "type": "inbox",
+       "unreadMessageCount": 7},
+      {"accountId": "account3",
+       "favorite": true,
+       "name": "Inbox",
+       "path": "/INBOX",
+       "totalMessageCount": 94,
+       "type": "inbox",
+       "unreadMessageCount": 3}],
+    "event": event,
+    "message": {
+      "author": "Someone Else <some.one.else@nowhere.org>",
+      "ccList": [],
+      "date": "2022-10-12T16:05:00.000Z",
+      "flagged": false,
+      "messageId": "9477b273-0cea-c454-e6c3-86f452807092@nowhere.org",
+      "headersOnly": false,
+      "junk": false,
+      "junkScore": 0,
+      "read": true,
+      "size": 4014,
+      "subject": "Scriptable Notifications",
+      "tags": [],
+      "folder": {
+        "accountId": "account3",
+        "name": "Inbox",
+        "path": "/INBOX",
+        "type": "inbox"}
+      }
+    };
   switch (event) {
     case "start":
-// TODO: event == "start"
+      payload.message = null;
     case "new":
-// TODO: event == "new"
-      break;
     case "read":
-// TODO: event == "read"
-      break;
     case "deleted":
-// TODO: event == "deleted"
+      await browser.runtime.sendNativeMessage(
+        "scriptableNotifications",
+        payload
+      );
       break
     default:
       await browser.runtime.sendNativeMessage(
@@ -284,6 +353,7 @@ const restoreOptions = async () => {
 // BUG: Why isnt' that done automatically with the help of event listener "change"?
       document.getElementById("notifyScriptTrue").disabled = false;
       document.getElementById("notifyScriptFalse").disabled = false;
+      document.getElementById("notifyScriptStart").disabled = true;
       document.getElementById("notifyScriptNew").disabled = true;
       document.getElementById("notifyScriptRead").disabled = true;
       document.getElementById("notifyScriptDeleted").disabled = true;
@@ -293,6 +363,7 @@ const restoreOptions = async () => {
 // BUG: Why isnt' that done automatically with the help of event listener "change"?
       document.getElementById("notifyScriptTrue").disabled = true;
       document.getElementById("notifyScriptFalse").disabled = true;
+      document.getElementById("notifyScriptStart").disabled = false;
       document.getElementById("notifyScriptNew").disabled = false;
       document.getElementById("notifyScriptRead").disabled = false;
       document.getElementById("notifyScriptDeleted").disabled = false;
