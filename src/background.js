@@ -2,7 +2,6 @@ window.scrNoti = window.scrNoti || {};
 const seenMessages = {};
 
 // TODO:
-// onQuit
 // mark read?
 // Update seenMessages when changing settings: simple/extended and folders
 
@@ -170,7 +169,7 @@ window.scrNoti.notifyNativeScript = async (message, event) => {
       };
 
       // Message data
-      if (event == "start" || event == "quit") {
+      if (event == "start") {
         messageDetails = null;
       } else {
         const folder = message.folder;
