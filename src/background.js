@@ -1,10 +1,6 @@
 window.scrNoti = window.scrNoti || {};
 const seenMessages = {};
 
-// TODO:
-// mark read?
-// Update seenMessages when changing settings: simple/extended and folders
-
 //==========================================
 // On new email...
 //==========================================

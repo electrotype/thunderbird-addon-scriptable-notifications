@@ -350,7 +350,8 @@ const restoreOptions = async () => {
   switch (scriptType) {
     case "simple":
       document.getElementById("notifyScriptSimple").checked = true;
-// BUG: Why isnt' that done automatically with the help of event listener "change"?
+      // This should be done automatically with the help of the event listener
+      // "change", but it is not - we do it manually here
       document.getElementById("notifyScriptTrue").disabled = false;
       document.getElementById("notifyScriptFalse").disabled = false;
       document.getElementById("notifyScriptStart").disabled = true;
@@ -360,7 +361,8 @@ const restoreOptions = async () => {
       break;
     case "extended":
       document.getElementById("notifyScriptExtended").checked = true;
-// BUG: Why isnt' that done automatically with the help of event listener "change"?
+      // This should be done automatically with the help of the event listener
+      // "change", but it is not - we do it manually here
       document.getElementById("notifyScriptTrue").disabled = true;
       document.getElementById("notifyScriptFalse").disabled = true;
       document.getElementById("notifyScriptStart").disabled = false;
