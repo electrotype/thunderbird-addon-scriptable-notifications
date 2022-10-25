@@ -200,8 +200,6 @@ const sendTestToScript = async (event) => {
     case "deleted":
 // TODO: event == "deleted"
       break
-    case "quit":
-// TODO: event == "quit"
     default:
       await browser.runtime.sendNativeMessage(
         "scriptableNotifications",
