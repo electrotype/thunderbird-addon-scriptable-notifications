@@ -6,6 +6,7 @@ This script receives the extended message from the add-on and writes it to a
 log file in the user's home directory. The file has the same basename as this
 script, but the suffix ".log".
 
+MIT License
 Copyright (C) 2022  Stephan Helma
 
 """

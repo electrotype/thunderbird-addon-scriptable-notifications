@@ -1,3 +1,7 @@
+// MIT License
+// Copyright (c) 2022 Electro Type
+// Copyright (c) 2022 Stephan Helma
+
 const isWindows = navigator.appVersion.indexOf("Win") > -1;
 const isMac = navigator.appVersion.indexOf("Mac") > -1;
 const foldersKeyToId = new Map();

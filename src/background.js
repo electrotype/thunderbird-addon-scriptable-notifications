@@ -1,3 +1,7 @@
+// MIT License
+// Copyright (c) 2022 Electro Type
+// Copyright (c) 2022 Stephan Helma
+
 window.scrNoti = window.scrNoti || {};
 const seenMessages = {};
 
