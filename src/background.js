@@ -72,6 +72,17 @@ browser.messages.onUpdated.removeListener(
 browser.messages.onUpdated.addListener(window.scrNoti.messageOnUpdatedListener);
 
 //==========================================
+// On receiving (update) message...
+//==========================================
+window.scrNoti.onNotifyListener = async (message) => {
+  window.scrNoti.updateSeenMessages();
+};
+browser.runtime.onMessage.removeListener(
+  window.scrNoti.onNotifyListener
+);
+browser.runtime.onMessage.addListener(window.scrNoti.onNotifyListener);
+
+//==========================================
 // Any unread messages?
 //==========================================
 window.scrNoti.hasUnreadMessages = async () => {

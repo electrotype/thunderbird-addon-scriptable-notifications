@@ -299,6 +299,8 @@ const saveOptions = async () => {
     foldersToCheck: foldersToCheck,
     scriptType: scriptType,
   });
+  // Update `seenMessages` dictionary
+  await browser.runtime.sendMessage({});
 
   if (savedMsgTimeout) {
     clearTimeout(savedMsgTimeout);
