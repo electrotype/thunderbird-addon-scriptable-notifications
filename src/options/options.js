@@ -115,7 +115,6 @@ const addListeners = async () => {
       document.getElementById("notifyScriptStart").disabled = true;
       document.getElementById("notifyScriptNew").disabled = true;
       document.getElementById("notifyScriptRead").disabled = true;
-      document.getElementById("notifyScriptDeleted").disabled = true;
     });
 
   document
@@ -126,7 +125,6 @@ const addListeners = async () => {
       document.getElementById("notifyScriptStart").disabled = false;
       document.getElementById("notifyScriptNew").disabled = false;
       document.getElementById("notifyScriptRead").disabled = false;
-      document.getElementById("notifyScriptDeleted").disabled = false;
     });
 
   document
@@ -157,12 +155,6 @@ const addListeners = async () => {
     .querySelector("#notifyScriptRead")
     .addEventListener("click", async () => {
       await sendTestToScript("read");
-    });
-
-  document
-    .querySelector("#notifyScriptDeleted")
-    .addEventListener("click", async () => {
-      await sendTestToScript("deleted");
     });
 
   document.querySelectorAll(".tab").forEach((tabEl) => {
@@ -363,7 +355,6 @@ const restoreOptions = async () => {
       document.getElementById("notifyScriptStart").disabled = true;
       document.getElementById("notifyScriptNew").disabled = true;
       document.getElementById("notifyScriptRead").disabled = true;
-      document.getElementById("notifyScriptDeleted").disabled = true;
       break;
     case "extended":
       document.getElementById("notifyScriptExtended").checked = true;
@@ -374,7 +365,6 @@ const restoreOptions = async () => {
       document.getElementById("notifyScriptStart").disabled = false;
       document.getElementById("notifyScriptNew").disabled = false;
       document.getElementById("notifyScriptRead").disabled = false;
-      document.getElementById("notifyScriptDeleted").disabled = false;
       break;
   };
 
