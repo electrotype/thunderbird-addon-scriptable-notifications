@@ -296,7 +296,7 @@ const saveOptions = async () => {
     scriptType: scriptType,
   });
   // Update `seenMessages` dictionary
-  await browser.runtime.sendMessage({});
+  await browser.runtime.sendMessage({optionsChanged: true});
 
   if (savedMsgTimeout) {
     clearTimeout(savedMsgTimeout);

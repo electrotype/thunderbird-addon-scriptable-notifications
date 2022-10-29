@@ -79,7 +79,9 @@ browser.messages.onUpdated.addListener(window.scrNoti.messageOnUpdatedListener);
 // On receiving (update) message...
 //==========================================
 window.scrNoti.onNotifyListener = async (message) => {
-  window.scrNoti.updateSeenMessages();
+  if ("optionsChanged" in message && message.optionsChanged) {
+    window.scrNoti.updateSeenMessages();
+  }
 };
 browser.runtime.onMessage.removeListener(
   window.scrNoti.onNotifyListener
