@@ -1,3 +1,8 @@
+/* MIT License
+ * Copyright (c) 2022 Electro Type
+ * Copyright (c) 2022 Stephan Helma
+ */
+
 html, body {
   font-size: 18px;
   font-family: verdana, arial;
@@ -90,6 +95,10 @@ header img {
   font-weight: bold;
 }
 
+#nativescriptHeader {
+  cursor: pointer;
+}
+
 #scriptPath {
   margin-top: 0.4em;
 }
@@ -133,5 +142,3 @@ header img {
   padding-left: 0.4em;
   border-left: 0.4em solid #f5c12f;
 }
-
-

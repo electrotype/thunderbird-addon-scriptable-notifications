@@ -1,3 +1,7 @@
+// MIT License
+// Copyright (c) 2022 Electro Type
+// Copyright (c) 2022 Stephan Helma
+
 const isWindows = navigator.appVersion.indexOf("Win") > -1;
 const isMac = navigator.appVersion.indexOf("Mac") > -1;
 const foldersKeyToId = new Map();
@@ -87,8 +91,8 @@ const uuid = () => {
 };
 
 const addListeners = async () => {
-  document.querySelector("#saveFolders").addEventListener("click", () => {
-    saveFolders();
+  document.querySelector("#saveOptions").addEventListener("click", () => {
+    saveOptions();
   });
 
   document.querySelectorAll(".downloadManifest").forEach((btnEl) => {
@@ -104,6 +108,26 @@ const addListeners = async () => {
     });
 
   document
+    .querySelector("#notifyScriptSimple")
+    .addEventListener("change", () => {
+      document.getElementById("notifyScriptTrue").disabled = false;
+      document.getElementById("notifyScriptFalse").disabled = false;
+      document.getElementById("notifyScriptStart").disabled = true;
+      document.getElementById("notifyScriptNew").disabled = true;
+      document.getElementById("notifyScriptRead").disabled = true;
+    });
+
+  document
+    .querySelector("#notifyScriptExtended")
+    .addEventListener("change", () => {
+      document.getElementById("notifyScriptTrue").disabled = true;
+      document.getElementById("notifyScriptFalse").disabled = true;
+      document.getElementById("notifyScriptStart").disabled = false;
+      document.getElementById("notifyScriptNew").disabled = false;
+      document.getElementById("notifyScriptRead").disabled = false;
+    });
+
+  document
     .querySelector("#notifyScriptTrue")
     .addEventListener("click", async () => {
       await sendTestToScript(true);
@@ -113,6 +137,24 @@ const addListeners = async () => {
     .querySelector("#notifyScriptFalse")
     .addEventListener("click", async () => {
       await sendTestToScript(false);
+    });
+
+  document
+    .querySelector("#notifyScriptStart")
+    .addEventListener("click", async () => {
+      await sendTestToScript("start");
+    });
+
+  document
+    .querySelector("#notifyScriptNew")
+    .addEventListener("click", async () => {
+      await sendTestToScript("new");
+    });
+
+  document
+    .querySelector("#notifyScriptRead")
+    .addEventListener("click", async () => {
+      await sendTestToScript("read");
     });
 
   document.querySelectorAll(".tab").forEach((tabEl) => {
@@ -129,23 +171,113 @@ const addListeners = async () => {
       document.querySelector("#" + contenId).style.display = "block";
     });
   });
+
+  document
+    .querySelector("#nativescriptHeader")
+    .addEventListener("click", () => {
+      var x = document.getElementById("nativescript");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+        document.getElementById("nativescriptRightarrow").style.display = "none";
+        document.getElementById("nativescriptDownarrow").style.display = "inline";
+      } else {
+        x.style.display = "none";
+        document.getElementById("nativescriptRightarrow").style.display = "inline";
+        document.getElementById("nativescriptDownarrow").style.display = "none";
+      };
+    });
 };
 
 //==========================================
 // Send test to script
 //==========================================
-const sendTestToScript = async (hasUnreadMessages) => {
-  await browser.runtime.sendNativeMessage(
-    "scriptableNotifications",
-    hasUnreadMessages
-  );
+const sendTestToScript = async (event) => {
+  const payload = {
+    "accounts": [
+      {"id": "account1",
+       "identities": [],
+       "name": "Local Folders",
+       "type": "none"},
+      {"id": "account2",
+       "identities": [
+          {"email": "name.surname@company.com",
+           "label": "",
+           "name": "Name Surname",
+           "organization": "Company"}],
+       "name": "Business",
+       "type": "imap"},
+      {"id": "account3",
+       "identities": [
+          {"email": "name@private.net",
+           "label": "",
+           "name": "Name Surname",
+           "organization": ""},
+          {"email": "name.surname@private.net",
+           "label": "",
+           "name": "Name Surname",
+           "organization": ""}],
+       "name": "Private",
+       "type": "imap"}],
+    "folders": [
+      {"accountId": "account2",
+       "favorite": true,
+       "name": "Inbox",
+       "path": "/INBOX",
+       "totalMessageCount": 74,
+       "type": "inbox",
+       "unreadMessageCount": 7},
+      {"accountId": "account3",
+       "favorite": true,
+       "name": "Inbox",
+       "path": "/INBOX",
+       "totalMessageCount": 94,
+       "type": "inbox",
+       "unreadMessageCount": 3}],
+    "event": event,
+    "message": {
+      "author": "Someone Else <some.one.else@nowhere.org>",
+      "ccList": [],
+      "date": "2022-10-12T16:05:00.000Z",
+      "flagged": false,
+      "messageId": "9477b273-0cea-c454-e6c3-86f452807092@nowhere.org",
+      "headersOnly": false,
+      "junk": false,
+      "junkScore": 0,
+      "read": true,
+      "size": 4014,
+      "subject": "Scriptable Notifications",
+      "tags": [],
+      "folder": {
+        "accountId": "account3",
+        "name": "Inbox",
+        "path": "/INBOX",
+        "type": "inbox"}
+      }
+    };
+  switch (event) {
+    case "start":
+      payload.message = null;
+    case "new":
+    case "read":
+    case "deleted":
+      await browser.runtime.sendNativeMessage(
+        "scriptableNotifications",
+        payload
+      );
+      break
+    default:
+      await browser.runtime.sendNativeMessage(
+        "scriptableNotifications",
+        event
+      );
+  };
 };
 
 //==========================================
-// Save folders
+// Save options
 //==========================================
 let savedMsgTimeout;
-const saveFolders = async () => {
+const saveOptions = async () => {
   const foldersToCheck = [];
   const folderCheckboxesEl = document.getElementsByClassName("folderCheckbox");
   for (const folderCheckboxEl of folderCheckboxesEl) {
@@ -156,9 +288,15 @@ const saveFolders = async () => {
     }
   }
 
+  // "simple" or "extended"
+  const scriptType = document.querySelector('input[name="notifyScriptType"]:checked').value;
+
   await messenger.storage.local.set({
     foldersToCheck: foldersToCheck,
+    scriptType: scriptType,
   });
+  // Update `seenMessages` dictionary
+  await browser.runtime.sendMessage({optionsChanged: true});
 
   if (savedMsgTimeout) {
     clearTimeout(savedMsgTimeout);
@@ -189,6 +327,46 @@ const restoreOptions = async () => {
       checkboxEl.checked = true;
     }
   }
+
+  const { optionsPageHasBeenShown } = await messenger.storage.local.get({
+    optionsPageHasBeenShown: false,
+  });
+
+  if (!optionsPageHasBeenShown) {
+    document.getElementById("nativescript").style.display = "block";
+    document.getElementById("nativescriptRightarrow").style.display = "none";
+    document.getElementById("nativescriptDownarrow").style.display = "inline";
+    await messenger.storage.local.set({
+      optionsPageHasBeenShown: true,
+    });
+  }
+
+  const { scriptType } = await messenger.storage.local.get({
+    scriptType: "simple",
+  });
+
+  switch (scriptType) {
+    case "simple":
+      document.getElementById("notifyScriptSimple").checked = true;
+      // This should be done automatically with the help of the event listener
+      // "change", but it is not - we do it manually here
+      document.getElementById("notifyScriptTrue").disabled = false;
+      document.getElementById("notifyScriptFalse").disabled = false;
+      document.getElementById("notifyScriptStart").disabled = true;
+      document.getElementById("notifyScriptNew").disabled = true;
+      document.getElementById("notifyScriptRead").disabled = true;
+      break;
+    case "extended":
+      document.getElementById("notifyScriptExtended").checked = true;
+      // This should be done automatically with the help of the event listener
+      // "change", but it is not - we do it manually here
+      document.getElementById("notifyScriptTrue").disabled = true;
+      document.getElementById("notifyScriptFalse").disabled = true;
+      document.getElementById("notifyScriptStart").disabled = false;
+      document.getElementById("notifyScriptNew").disabled = false;
+      document.getElementById("notifyScriptRead").disabled = false;
+      break;
+  };
 
   if (isWindows) {
     document.querySelector("#tabWindows").click();
@@ -265,7 +443,7 @@ echo    "type": "stdio",>> %manifestPath%
 echo    "allowed_extensions": [ "{271e72b1-166c-471b-bc06-41e03f176b15}" ]>> %manifestPath%
 echo }>> %manifestPath%
 
-echo Manifest created successfully at: %manifestPath% 
+echo Manifest created successfully at: %manifestPath%
 echo.
 
 echo ==============================================
@@ -279,7 +457,7 @@ echo.
 echo ==============================================
 echo Result
 echo ==============================================
-echo All good! 
+echo All good!
 echo Your native script: ${scriptPath}
 echo should now be accessible from the Scriptable Notifications Thunderbird add-on.
 echo.
