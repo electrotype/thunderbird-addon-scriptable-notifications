@@ -259,7 +259,6 @@ const sendTestToScript = async (event) => {
       payload.message = null;
     case "new":
     case "read":
-    case "deleted":
       await browser.runtime.sendNativeMessage(
         "scriptableNotifications",
         payload
