@@ -56,18 +56,8 @@ window.scrNoti.messageOnUpdatedListener = async (
   }
 
   if (changedProperties.read) {
-    // We keep the message id in the seenMessages until we delete the message,
-    // so that the message does not show up again as new
+    seenMessages[message.folder.accountId + message.folder.path].delete(message.id);
     await window.scrNoti.notifyNativeScript(message, "read");
-  } else {
-    const { scriptType } = await messenger.storage.local.get({
-      scriptType: "simple",
-    });
-    if (scriptType != "simple") {
-      // We add the message id to the seenMessages, because we do not want this
-      // message to show up again as new
-      seenMessages[message.folder.accountId + message.folder.path].add(message.id);
-    }
   }
 };
 browser.messages.onUpdated.removeListener(
