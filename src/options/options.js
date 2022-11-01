@@ -10,6 +10,7 @@ const foldersKeyToId = new Map();
 // Build HTML form
 //==========================================
 const buildForm = async () => {
+  let folderInfo = null;
   const accounts = await browser.accounts.list(true);
   const accountsListEl = document.querySelector("#accounts");
   for (const account of accounts) {
@@ -20,11 +21,19 @@ const buildForm = async () => {
         if (folder.type !== "trash") {
           await addFormFolder(accountsListEl, account, folder);
         }
-      } else {
+      } else if (folder.type === "inbox") {
         // Only the "inbox" of the mail account can be selected.
-        if (folder.type === "inbox") {
+        await addFormFolder(accountsListEl, account, folder);
+      } else {
+        // Add any other favorite folder
+        try {
+          folderInfo = await messenger.folders.getFolderInfo(folder);
+        } catch (error) {
+          // Failed to get folder info
+          continue
+        }
+        if (folderInfo.favorite) {
           await addFormFolder(accountsListEl, account, folder);
-          break;
         }
       }
     }
@@ -70,7 +79,7 @@ const addFormFolder = async (accountsListEl, account, folder) => {
 
     folderTitle2Span.appendChild(document.createTextNode(` - Feed`));
   } else {
-    const inboxSpanText = document.createTextNode(` - Inbox`);
+    const inboxSpanText = document.createTextNode(` - ${folder.name}`);
     folderTitle2Span.appendChild(inboxSpanText);
   }
 };
