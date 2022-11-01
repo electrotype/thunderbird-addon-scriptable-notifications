@@ -225,14 +225,16 @@ const sendTestToScript = async (event) => {
        "path": "/INBOX",
        "totalMessageCount": 74,
        "type": "inbox",
-       "unreadMessageCount": 7},
+       "unreadMessageCount": 7,
+       "seenMessageCount": 7},
       {"accountId": "account3",
        "favorite": true,
        "name": "Inbox",
        "path": "/INBOX",
        "totalMessageCount": 94,
        "type": "inbox",
-       "unreadMessageCount": 3}],
+       "unreadMessageCount": 3,
+       "seenMessageCount": 3}],
     "event": event,
     "message": {
       "author": "Someone Else <some.one.else@nowhere.org>",
@@ -256,8 +258,21 @@ const sendTestToScript = async (event) => {
     };
   switch (event) {
     case "start":
+      // Set message to null
       payload.message = null;
+      await browser.runtime.sendNativeMessage(
+        "scriptableNotifications",
+        payload
+      );
+      break
     case "new":
+      // Changes 'seenMessageCount'
+      payload.folders.at(1).seenMessageCount = payload.folders.at(1).unreadMessageCount - 1;
+      await browser.runtime.sendNativeMessage(
+        "scriptableNotifications",
+        payload
+      );
+      break
     case "read":
       await browser.runtime.sendNativeMessage(
         "scriptableNotifications",
