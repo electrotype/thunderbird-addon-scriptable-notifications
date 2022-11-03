@@ -56,7 +56,12 @@ window.scrNoti.messageOnUpdatedListener = async (
   }
 
   if (changedProperties.read) {
-    seenMessages[message.folder.accountId + message.folder.path].delete(message.id);
+    const { scriptType } = await messenger.storage.local.get({
+      scriptType: "simple",
+    });
+    if (scriptType == "extended") {
+      seenMessages[message.folder.accountId + message.folder.path].delete(message.id);
+    }
     await window.scrNoti.notifyNativeScript(message, "read");
   }
 };
