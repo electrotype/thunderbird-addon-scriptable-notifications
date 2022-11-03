@@ -22,7 +22,6 @@ const buildForm = async () => {
           await addFormFolder(accountsListEl, account, folder);
         }
       } else if (folder.type === "inbox") {
-        // Only the "inbox" of the mail account can be selected.
         await addFormFolder(accountsListEl, account, folder);
       } else {
         // Add any other favorite folder
