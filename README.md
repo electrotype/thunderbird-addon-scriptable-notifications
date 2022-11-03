@@ -96,13 +96,17 @@ On the "options" page of the add-on:
 
 - **`Inbox/Feed folders to monitor`**
 
-  The _inbox_ folders of all accounts registered in Thunderbird are listed here.
+  The _inbox_ and favorite folders of all accounts registered in Thunderbird are listed here.
   You select the ones for which you want the messages to be watched.
 
   For example, if you receive a new mail in the inbox of the account "`something@example.com`",
   but this inbox is not selected in the options, your script will not be called. The same thing happens
   when you read or delete a message in an inbox: this action will only call your script
   if the inbox the message is in has been selected in the options.
+
+  To monitor a mail folder that is not an _inbox_, right-click on the folder
+  (in the main Thunderbird interface) and choose `Favorite Folder`. The folder will
+  then be available to be selected on the add-on's options page.
 
   I personally store messages from all my accounts in the global "Local folders".
   I just have to select this inbox in the options since all new mails will end up there.
