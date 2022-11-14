@@ -14,6 +14,7 @@ Copyright (C) 2022  Stephan Helma
 import json
 import pathlib
 import pprint
+import signal
 import struct
 import sys
 import time
@@ -29,13 +30,13 @@ LOGFILE = pathlib.Path(
 # Helper functions
 #
 
-def get_message(buf):
+def get_message():
     """Get message from the standard input."""
-    raw_length = buf.read(4)
+    raw_length = sys.stdin.buffer.read(4)
     if len(raw_length) == 0:
         return {}
     length = struct.unpack('@I', raw_length)[0]
-    message = buf.read(length).decode('utf-8')
+    message = sys.stdin.buffer.read(length).decode('utf-8')
     return message
 
 
@@ -47,25 +48,40 @@ def send_message(msg):
     sys.stdout.buffer.write(content)
     sys.stdout.buffer.flush()
 
+
+def on_sigterm(signum, frame):
+    with open(LOGFILE, 'a') as log:
+        print(f'\n====== {time.asctime()} ======', file=log, flush=True)
+        print(f'****** stdin closed ******', file=log, flush=True)
+        exit(0)
+
+
 #
 # Main function
 #
 
 def main():
+    signal.signal(signal.SIGTERM, on_sigterm)
+
     with open(LOGFILE, 'a') as log:
-        with sys.stdin.buffer as buf:
-            print(f'****** stdin opened ******', file=log')
+        print(f'****** stdin opened ******', file=log, flush=True)
+        while True:
             try:
                 # Get message sent
-                message = get_message(buf)
+                message = get_message()
+                if not message:
+                    print(file=log, flush=True, end='.')
+                    time.sleep(1)
+                    continue
 
                 # Parse the message
                 payload = json.loads(message)
 
                 # (Pretty) print to logfile
-                print(f'====== {time.asctime()} ======', file=log)
+                print(f'\n====== {time.asctime()} ======', file=log, flush=True)
                 pp = pprint.PrettyPrinter(stream=log)
                 pp.pprint(payload)
+                print('======', file=log, flush=True)
 
                 # Send back required message
                 send_message({})
@@ -75,10 +91,7 @@ def main():
                 print(
                     f'EXCEPTION: '
                     f'{"".join(traceback.format_exception(type(e), e, e.__traceback__))}',
-                    file=log)
-
-        print(f'====== {time.asctime()} ======', file=log)
-        print(f'****** stdin closed ******', file=log')
+                    file=log, flush=True)
 
 
 if __name__ == '__main__':
