@@ -313,9 +313,13 @@ const saveOptions = async () => {
   // "simple" or "extended"
   const scriptType = document.querySelector('input[name="notifyScriptType"]:checked').value;
 
+  // "connectionless" or "connectionbased"
+  const connectionType = document.querySelector('input[name="notifyConnection"]:checked').value;
+
   await messenger.storage.local.set({
     foldersToCheck: foldersToCheck,
     scriptType: scriptType,
+    connectionType: connectionType,
   });
   // Update `seenMessages` dictionary
   await browser.runtime.sendMessage({optionsChanged: true});
@@ -387,6 +391,19 @@ const restoreOptions = async () => {
       document.getElementById("notifyScriptStart").disabled = false;
       document.getElementById("notifyScriptNew").disabled = false;
       document.getElementById("notifyScriptRead").disabled = false;
+      break;
+  };
+
+  const { connectionType } = await messenger.storage.local.get({
+    connectionType: "connectionless",
+  });
+
+  switch (connectionType) {
+    case "connectionless":
+      document.getElementById("notifyConnectionConnectionless").checked = true;
+      break;
+    case "connectionbased":
+      document.getElementById("notifyConnectionConnectionbased").checked = true;
       break;
   };
 
