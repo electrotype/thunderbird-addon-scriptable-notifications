@@ -4,7 +4,7 @@
 
 window.scrNoti = window.scrNoti || {};
 const seenMessages = {};
-let port = null;
+let nativeConnection = null;
 
 //==========================================
 // On new email...
@@ -76,9 +76,9 @@ browser.messages.onUpdated.addListener(window.scrNoti.messageOnUpdatedListener);
 //==========================================
 window.scrNoti.onNotifyListener = async (message) => {
   if ("optionsChanged" in message && message.optionsChanged) {
-    if (port != null) {
-      port.disconnect();
-      port = null;
+    if (nativeConnection != null) {
+      nativeConnection.disconnect();
+      nativeConnection = null;
     };
     await window.scrNoti.updateSeenMessages();
     await window.scrNoti.notifyNativeScript(null, "start");
@@ -232,10 +232,11 @@ window.scrNoti.notifyNativeScript = async (message, event) => {
       );
       break;
     case "connectionbased":
-      if (port == null) {
-        port = await browser.runtime.connectNative("scriptableNotifications");
+      if (nativeConnection == null) {
+        nativeConnection = await browser.runtime.connectNative(
+          "scriptableNotifications");
       };
-      await port.postMessage(payload);
+      await nativeConnection.postMessage(payload);
       break;
   };
 

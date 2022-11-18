@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Script to debug the "Scriptable Notifications" add-on for Thunderbird.
+Script to debug the connectionless mode of the "Scriptable Notifications"
+add-on for Thunderbird.
 
 This script receives the extended message from the add-on and writes it to a
 log file in the user's home directory. The file has the same basename as this
