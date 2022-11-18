@@ -93,7 +93,7 @@
         </div>
       </p>
       <p>
-        <div class="sectionTitle">Select type of data sent to the native script</div>
+        <div class="sectionTitle">Type of data sent to the native script</div>
         <p>
           <div>
             <p>
@@ -127,6 +127,30 @@
               <button type="button" class="smallBtn" id="notifyScriptStart">Start Thunderbird</button>
               <button type="button" class="smallBtn" id="notifyScriptNew">New message</button>
               <button type="button" class="smallBtn" id="notifyScriptRead">Message read</button>
+            </p>
+          </div>
+        </p>
+      </p>
+      <p>
+        <div class="sectionTitle">Type of data connection</div>
+        <p>
+          <div>
+            <p>
+              <input type="radio" id="notifyConnectionConnectionless" name="notifyConnection" value="connectionless" checked="checked">
+              <label for="notifyConnectionConnectionless">
+                <strong>Connectionless</strong>
+                <br/>
+                A new instance of the native script/application is created for each message.
+              </label>
+            </p>
+            <p>
+              <input type="radio" id="notifyConnectionConnectionbased" name="notifyConnection" value="connectionbased">
+              <label for="notifyConnectionConnectionbased">
+                <strong>Connection based</strong>
+                <br/>
+                This launches the native script/application, if it is not already running.
+                The script/application stays running until Thunderbird is closed.
+              </label>
             </p>
           </div>
         </p>
