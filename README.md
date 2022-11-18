@@ -87,12 +87,24 @@ On the "options" page of the add-on:
 
      The instructions on how to register your script are provided for Linux/Mac and Windows.
 
-- **`Select type of data sent to the native script`**
+- **`Type of data sent to the native script`**
 
   In this section you choose between the `simple` or the `extended` mode.
 
   In addition, to help you write your script, buttons are provided to simulate
   the calls that the add-on will make.
+
+- **`Type of data connection`**
+
+  You can decide whether the connection to your script/application should be kept open
+  or not.
+
+  By using the `Connectionless` option, a new instance of your script/application will be called whenever
+  there is an event to send and no connection will be held open.
+
+  By using the `Connection based` option, a permanent connection will be established with your
+  script/application and the events will be sent over that connection. This option allows
+  to [react](https://github.com/electrotype/thunderbird-addon-scriptable-notifications/blob/main/scriptExamples/extendedMode/python-logging/script-connection-based.py#L53-L57) to Thunderbird closing, for example.
 
 - **`Inbox/Feed folders to monitor`**
 
@@ -117,14 +129,25 @@ On the "options" page of the add-on:
 
 #### Scripts for the "`extended`" mode
 
-**Python - Payload logging**
+**Python - Payload logging - Connectionless**
 
-Provided at: `scriptExamples/extendedMode/python-logging/script.py`.
+Provided at: `scriptExamples/extendedMode/python-logging/script-connectionless.py`.
 
-This script is ideal as a base for a custom Python script.
+This script is ideal as a base for a custom Python script using the
+`connectionless` option.
 Since it simply logs the content it receives from the add-on,
 it is a good script to test your installation and to know
 what the `extended` payload looks like.
+
+Python 3 must be installed on the machine.
+
+**Python - Payload logging - Connection based**
+
+Provided at: `scriptExamples/extendedMode/python-logging/script-connection-based.py`.
+
+This script is ideal as a base for a custom Python script using the
+`connection based` option. Permament connections and Thunderbird
+closing are handled.
 
 Python 3 must be installed on the machine.
 
