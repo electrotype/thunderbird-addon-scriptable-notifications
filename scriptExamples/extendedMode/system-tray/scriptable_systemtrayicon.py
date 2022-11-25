@@ -153,10 +153,10 @@ __pyversion__ = '>=3.6'             # We use f-strings!
 CONFIG = {
     'notify': False,                # Show notifications
     'show_read_icon': False,        # Show icon, when all messages are read
-    'mail': 'thunderbird --mail',   # The program to execute
-    'mail_reset': 'thunderbird --mail',     # Reset the counter, when mail program is started
-    'reset_menu': True,             # Add menu item to reset the counter for all folders
-    'quit_menu': False,             # Add a quit item to the menu
+    'mail': 'thunderbird --mail',   # Menu item "Thunderbird"
+    'mail_reset': 'thunderbird --mail',     # Menu item "Thunderbird/Reset"
+    'reset_menu': True,             # Menu item "Reset message counter"
+    'quit_menu': False,             # Menu item "Quit"
     'color': {
         'new mail': {
             'fill': (238, 210, 2, 255),         # safety yellow
@@ -175,7 +175,7 @@ CONFIG = {
             'outline': (255, 255, 255, 191)     # white
         }
     },
-#    'logging': 'WARNING'            # Logging level, set to `None` to disable it
+#    'logging': 'WARNING'           # Logging level, set to `None` to disable it
 #    'logging': 'INFO'
 #    'logging': 'DEBUG'
     'logging': None
