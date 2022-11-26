@@ -188,7 +188,9 @@ if CONFIG['logging']:
     logging.basicConfig(
         level=getattr(logging, CONFIG['logging']),
         format='%(levelname)8s %(funcName)s%(message)s',
-        filename=f'/home/sph/{pathlib.Path(__file__).with_suffix(".log").name}')
+        filename=pathlib.Path(
+            '~', pathlib.Path(__file__).with_suffix('.log').name
+            ).expanduser())
 else:
     # Make a `logging` object, which does nothing
     # https://stackoverflow.com/questions/13521981/implementing-an-optional-logger-in-code#answer-13525899
