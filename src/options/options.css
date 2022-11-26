@@ -142,3 +142,7 @@ header img {
   padding-left: 0.4em;
   border-left: 0.4em solid #f5c12f;
 }
+
+#accountsTip {
+  margin-bottom: 1em;
+}

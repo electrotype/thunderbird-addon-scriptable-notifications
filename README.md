@@ -104,7 +104,7 @@ On the "options" page of the add-on:
 
   By using the `Connection based` option, a permanent connection will be established with your
   script/application and the events will be sent over that connection. This option allows
-  to [react](https://github.com/electrotype/thunderbird-addon-scriptable-notifications/blob/main/scriptExamples/extendedMode/python-logging/script-connection-based.py#L53-L57) to Thunderbird closing, for example.
+  to [react](https://github.com/electrotype/thunderbird-addon-scriptable-notifications/blob/main/scriptExamples/extendedMode/logging/script-connection-based.py#L53-L57) to Thunderbird closing, for example.
 
 - **`Inbox/Feed folders to monitor`**
 
@@ -129,9 +129,9 @@ On the "options" page of the add-on:
 
 #### Scripts for the "`extended`" mode
 
-**Python - Payload logging - Connectionless**
+**Payload logging - Connectionless**
 
-Provided at: `scriptExamples/extendedMode/python-logging/script-connectionless.py`.
+Provided at: `scriptExamples/extendedMode/logging/script-connectionless.py`.
 
 This script is ideal as a base for a custom Python script using the
 `connectionless` option.
@@ -141,15 +141,29 @@ what the `extended` payload looks like.
 
 Python 3 must be installed on the machine.
 
-**Python - Payload logging - Connection based**
+**Payload logging - Connection based**
 
-Provided at: `scriptExamples/extendedMode/python-logging/script-connection-based.py`.
+Provided at: `scriptExamples/extendedMode/logging/script-connection-based.py`.
 
 This script is ideal as a base for a custom Python script using the
-`connection based` option. Permament connections and Thunderbird
+`connection based` option. Permanent connections and Thunderbird
 closing are handled.
 
 Python 3 must be installed on the machine.
+
+**Configurable System Tray - Connection based**
+
+Provided at: `scriptExamples/extendedMode/system-tray/script-systemtrayicon.py`.
+
+A complete and configurable script that uses a tray icon to notify of
+the current messages status.
+
+Python 3.6+ must be installed on the machine with these packages:
+
+- `pystray`
+- `Pillow`
+
+Take a look at the comments in the [script source](https://github.com/electrotype/thunderbird-addon-scriptable-notifications/blob/main/scriptExamples/extendedMode/system-tray/script-systemtrayicon.py) for full details on how to configure and use it!
 
 #### Scripts for the "`simple`" mode
 
@@ -210,7 +224,7 @@ same directory as the`script.sh` script.
 #### Extra info on writing an "extended" mode script
 
 - The extended payload sent by the add-on is a JSON object. In order to know the structure
-  of this object, register the `python-logging` script and look at the
+  of this object, register one of the `scriptExamples/extendedMode/logging/*` script and look at the
   generated log (written in your home folder). You can also look at this
   [example](https://github.com/electrotype/thunderbird-addon-scriptable-notifications/blob/main/src/options/options.js#L195).
 

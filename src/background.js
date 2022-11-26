@@ -6,6 +6,13 @@ window.scrNoti = window.scrNoti || {};
 const seenMessages = {};
 let nativeConnection = null;
 
+window.scrNoti.getScriptType = async () => {
+  const { scriptType } = await messenger.storage.local.get({
+    scriptType: "simple",
+  });
+  return scriptType;
+};
+
 //==========================================
 // On new email...
 //==========================================
@@ -18,10 +25,7 @@ window.scrNoti.newEmailListener = async (folder, messages) => {
   // Find new messages, which have not been seen yet
   if (messages && messages.messages && messages.messages.length > 0) {
 
-    const { scriptType } = await messenger.storage.local.get({
-      scriptType: "simple",
-    });
-
+    const scriptType = await window.scrNoti.getScriptType();
     for (const message of messages.messages) {
       if (message && !message.junk) {
         if (scriptType == "simple") {
@@ -57,9 +61,7 @@ window.scrNoti.messageOnUpdatedListener = async (
   }
 
   if (changedProperties.read) {
-    const { scriptType } = await messenger.storage.local.get({
-      scriptType: "simple",
-    });
+    const scriptType = await window.scrNoti.getScriptType();
     if (scriptType == "extended") {
       seenMessages[message.folder.accountId + message.folder.path].delete(message.id);
     }
@@ -76,6 +78,13 @@ browser.messages.onUpdated.addListener(window.scrNoti.messageOnUpdatedListener);
 //==========================================
 window.scrNoti.onNotifyListener = async (message) => {
   if ("optionsChanged" in message && message.optionsChanged) {
+
+    // Nothing to do for the "simple" mode.
+    const scriptType = await window.scrNoti.getScriptType();
+    if (scriptType == "simple") {
+      return;
+    }
+    
     if (nativeConnection != null) {
       nativeConnection.disconnect();
       nativeConnection = null;
@@ -115,9 +124,7 @@ window.scrNoti.hasUnreadMessages = async () => {
 //==========================================
 window.scrNoti.notifyNativeScript = async (message, event) => {
   let payload = null;
-  const { scriptType } = await messenger.storage.local.get({
-    scriptType: "simple",
-  });
+  const scriptType = await window.scrNoti.getScriptType();
 
   switch (scriptType) {
     case "simple":
@@ -322,9 +329,7 @@ window.scrNoti.tryNbrTimes = async (fnct, nbrTime) => {
 // Store all unread messages in global variable 'seenMessages'.
 //==========================================
 window.scrNoti.updateSeenMessages = async () => {
-  const { scriptType } = await messenger.storage.local.get({
-    scriptType: "simple",
-  });
+  const scriptType = await window.scrNoti.getScriptType();
   if (scriptType == "simple") {
     return;
   }

@@ -28,8 +28,8 @@
     "chrome_style": true
   },
   "icons": {
-      "16": "assets/icons/icon-16.png",
-      "32": "assets/icons/icon-32.png",
-      "64": "assets/icons/icon-64.png"
+    "16": "assets/icons/icon-16.png",
+    "32": "assets/icons/icon-32.png",
+    "64": "assets/icons/icon-64.png"
   }
 }
