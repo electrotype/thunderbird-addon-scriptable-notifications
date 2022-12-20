@@ -483,7 +483,7 @@ class StatusIcon:
     def thunderbird(self, thunderbird):
         """Start Thunderbird."""
         import subprocess
-        logging.debug('(%s)', item)
+        logging.debug('(%s)', thunderbird)
         logging.info(': Start Thunderbird')
 
         subprocess.Popen(thunderbird.split())
