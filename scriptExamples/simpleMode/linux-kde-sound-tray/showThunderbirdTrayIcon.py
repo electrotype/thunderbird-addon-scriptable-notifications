@@ -15,7 +15,7 @@ from gi.repository import Gtk as gtk, AppIndicator3 as appindicator
 
 def main():
 
-  indicator = appindicator.Indicator.new("scriptableNotificationsTrayIcon", "thunderbird", appindicator.IndicatorCategory.APPLICATION_STATUS)
+  indicator = appindicator.Indicator.new("scriptableNotificationsTrayIcon", "org.mozilla.Thunderbird", appindicator.IndicatorCategory.APPLICATION_STATUS)
   indicator.set_status(appindicator.IndicatorStatus.ACTIVE)
 
   menu = gtk.Menu()
