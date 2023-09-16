@@ -17,16 +17,20 @@ const buildForm = async () => {
     for (const folder of account.folders) {
       // All folders of a "Feed" account can be selected
       // except the "trash" one.
+      let folderAdded = false;
       if (account.type === "rss") {
         if (folder.type !== "trash") {
           await addFormFolder(accountsListEl, account, folder);
+          folderAdded = true;
         }
       } else if (folder.type === "inbox") {
         await addFormFolder(accountsListEl, account, folder);
-      } else {
-        // Add any favorite folders too
-        await addFavoriteFolders(accountsListEl, account, folder);
+        folderAdded = true;
       }
+
+      // Add any favorite folders too
+      await addFavoriteFolders(accountsListEl, account, folder, folderAdded);
+
     }
   }
 
@@ -36,24 +40,27 @@ const buildForm = async () => {
   }
 };
 
-const addFavoriteFolders = async (accountsListEl, account, folder, pathPrefix = '') => {
-  let folderInfo;
-  try {
-    folderInfo = await messenger.folders.getFolderInfo(folder);
-  } catch (error) {
-    // Failed to get folder info
-    console.warn(`Error getting folderInfo for: ${JSON.stringify(folder)}`);
-  }
-
-  // Is a favorite folder?
-  if (folderInfo?.favorite) {
-    await addFormFolder(accountsListEl, account, folder, pathPrefix);
+const addFavoriteFolders = async (accountsListEl, account, folder, folderAdded, pathPrefix = '') => {
+  // If the folder is not already added, validate
+  // if it's a favorite.
+  if(!folderAdded) {
+    let folderInfo;
+    try {
+      folderInfo = await messenger.folders.getFolderInfo(folder);
+    } catch (error) {
+      // Failed to get folder info
+      console.warn(`Error getting folderInfo for: ${JSON.stringify(folder)}`);
+    }
+  
+    if (folderInfo?.favorite) {
+      await addFormFolder(accountsListEl, account, folder, pathPrefix);
+    }
   }
 
   // Has subFolders?
   if(folder.subFolders) {
     for (const subFolder of folder.subFolders) {
-      await addFavoriteFolders(accountsListEl, account, subFolder, pathPrefix + folder.name + ' / ');
+      await addFavoriteFolders(accountsListEl, account, subFolder, false, pathPrefix + folder.name + ' / ');
     }
   }
 }
