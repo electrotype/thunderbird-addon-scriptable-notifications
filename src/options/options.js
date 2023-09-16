@@ -24,16 +24,8 @@ const buildForm = async () => {
       } else if (folder.type === "inbox") {
         await addFormFolder(accountsListEl, account, folder);
       } else {
-        // Add any other favorite folder
-        try {
-          folderInfo = await messenger.folders.getFolderInfo(folder);
-        } catch (error) {
-          // Failed to get folder info
-          continue
-        }
-        if (folderInfo.favorite) {
-          await addFormFolder(accountsListEl, account, folder);
-        }
+        // Add any favorite folders too
+        await addFavoriteFolders(accountsListEl, account, folder);
       }
     }
   }
@@ -44,7 +36,29 @@ const buildForm = async () => {
   }
 };
 
-const addFormFolder = async (accountsListEl, account, folder) => {
+const addFavoriteFolders = async (accountsListEl, account, folder, pathPrefix = '') => {
+  let folderInfo;
+  try {
+    folderInfo = await messenger.folders.getFolderInfo(folder);
+  } catch (error) {
+    // Failed to get folder info
+    console.warn(`Error getting folderInfo for: ${JSON.stringify(folder)}`);
+  }
+
+  // Is a favorite folder?
+  if (folderInfo?.favorite) {
+    await addFormFolder(accountsListEl, account, folder, pathPrefix);
+  }
+
+  // Has subFolders?
+  if(folder.subFolders) {
+    for (const subFolder of folder.subFolders) {
+      await addFavoriteFolders(accountsListEl, account, subFolder, pathPrefix + folder.name + ' / ');
+    }
+  }
+}
+
+const addFormFolder = async (accountsListEl, account, folder, pathPrefix = '') => {
   const checkboxId = `x${uuid()}`;
   const checkboxKey = createFolderCheckboxKey(folder);
   foldersKeyToId.set(checkboxKey, checkboxId);
@@ -78,7 +92,7 @@ const addFormFolder = async (accountsListEl, account, folder) => {
 
     folderTitle2Span.appendChild(document.createTextNode(` - Feed`));
   } else {
-    const inboxSpanText = document.createTextNode(` - ${folder.name}`);
+    const inboxSpanText = document.createTextNode(` - ${pathPrefix + folder.name}`);
     folderTitle2Span.appendChild(inboxSpanText);
   }
 };
