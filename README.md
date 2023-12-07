@@ -173,7 +173,7 @@ Provided at: `scriptExamples/simpleMode/windows-simple/script.bat`.
 
 Very basic script, only displays small alert messages.
 
-Python must be installed on the Windows machine.
+Python 3 must be installed on the Windows machine.
 
 The `scriptExamples/simpleMode/windows-simple/simpleNotification.py` file must
 be kept in the same directory as the `script.bat`.
