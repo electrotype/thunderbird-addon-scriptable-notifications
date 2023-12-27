@@ -30,6 +30,10 @@ another notification solution where you don't have to write an external script.
 
 ### Installation
 
+#### Warning
+
+Some people with a Mac say they cannot get the addon to work. If anyone with a Mac is able to get the addon to work, please let me know if there's anything special you need to do to get it to work, and I'll update the documentation...
+
 Note that the add-on will not work with a _Snap_ or _Flatpak_ version of Thunderbird. Those
 currently don't seem to support Native Messaging at all!
 If you know how to fix this, please let me know.
