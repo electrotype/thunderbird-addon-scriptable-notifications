@@ -32,8 +32,6 @@ another notification solution where you don't have to write an external script.
 
 #### Warning
 
-Some people with a Mac say they cannot get the addon to work. If anyone with a Mac is able to get the addon to work, please let me know if there's anything special you need to do to get it to work, and I'll update the documentation...
-
 Note that the add-on will not work with a _Snap_ or _Flatpak_ version of Thunderbird. Those
 currently don't seem to support Native Messaging at all!
 If you know how to fix this, please let me know.
@@ -86,7 +84,7 @@ On the "options" page of the add-on:
 
   2. Register your script. Registering the script is required because WebExtentions (the
      new way of writing add-ons for Thunderbird, Firefox, Chrome, etc.) are picky
-     on how an add-on can run a native executable. The protocole used is called
+     on how an add-on can run a native executable. The protocol used is called
      [Native messaging](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging).
 
      The instructions on how to register your script are provided for Linux/Mac and Windows.
@@ -182,6 +180,14 @@ Python 3 must be installed on the Windows machine.
 The `scriptExamples/simpleMode/windows-simple/simpleNotification.py` file must
 be kept in the same directory as the `script.bat`.
 
+**Mac - Simple**
+
+Provided at: `scriptExamples/simpleMode/mac-simple/simpleNotification.py`.
+
+Very basic script, only displays small alert messages.
+
+Python 3 must be installed.
+
 **Linux - Simple**
 
 Provided at: `scriptExamples/simpleMode/linux-simple/script.sh`.
@@ -207,12 +213,12 @@ able to add the icon to the system tray.
 
 The `scriptExamples/simpleMode/linux-kde-sound-tray/showThunderbirdTrayIcon.py` and
 `scriptExamples/simpleMode/linux-kde-sound-tray/tada.wav` files must be kept in the
-same directory as the`script.sh` script.
+same directory as the `script.sh` script.
 
 ### Writing an external script
 
 - It is a good idea to start your script from one provided in the
-  `scriptExamples` folder because the `Native messaging` protocole expects your
+  `scriptExamples` folder because the `Native messaging` protocol expects your
   script to read and write some data in a specific way.
 
 - There are some extra tips on how to write a native script on this
