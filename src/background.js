@@ -108,7 +108,7 @@ window.scrNoti.hasUnreadMessages = async () => {
   for (const folder of foldersToCheckForUnread) {
     const result = await browser.messages.query({
       unread: true,
-      folder: folder,
+      folderId: folder.id,
     });
 
     if (result && result.messages && result.messages.length > 0) {
@@ -175,7 +175,7 @@ window.scrNoti.notifyNativeScript = async (message, event) => {
         await window.scrNoti.getFoldersToCheckForUnread();
       const foldersList = [];
       for (const folder of foldersToInclude) {
-        const folderInfo = await messenger.folders.getFolderInfo(folder);
+        const folderInfo = await messenger.folders.getFolderInfo(folder.id);
         const folderData = {
           accountId: folder.accountId,
           favorite: folderInfo.favorite,

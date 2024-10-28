@@ -46,7 +46,7 @@ const addFavoriteFolders = async (accountsListEl, account, folder, folderAdded, 
   if(!folderAdded) {
     let folderInfo;
     try {
-      folderInfo = await messenger.folders.getFolderInfo(folder);
+      folderInfo = await messenger.folders.getFolderInfo(folder.id);
     } catch (error) {
       // Failed to get folder info
       console.warn(`Error getting folderInfo for: ${JSON.stringify(folder)}`);
