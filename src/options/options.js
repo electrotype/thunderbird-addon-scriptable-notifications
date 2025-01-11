@@ -222,31 +222,31 @@ const addListeners = async () => {
 //==========================================
 const sendTestToScript = async (event) => {
   const payload = {
-    "accounts": [
-      {"id": "account1",
-       "identities": [],
-       "name": "Local Folders",
-       "type": "none"},
-      {"id": "account2",
-       "identities": [
-          {"email": "name.surname@company.com",
-           "label": "",
-           "name": "Name Surname",
-           "organization": "Company"}],
-       "name": "Business",
-       "type": "imap"},
-      {"id": "account3",
-       "identities": [
-          {"email": "name@private.net",
-           "label": "",
-           "name": "Name Surname",
-           "organization": ""},
-          {"email": "name.surname@private.net",
-           "label": "",
-           "name": "Name Surname",
-           "organization": ""}],
-       "name": "Private",
-       "type": "imap"}],
+    "accounts": {
+      "account1": {
+        "identities": [],
+        "name": "Local Folders",
+        "type": "none"},
+      "account2": {
+        "identities": [
+           {"email": "name.surname@company.com",
+            "label": "",
+            "name": "Name Surname",
+            "organization": "Company"}],
+        "name": "Business",
+        "type": "imap"},
+      "account3": {
+        "identities": [
+           {"email": "name@private.net",
+            "label": "",
+            "name": "Name Surname",
+            "organization": ""},
+           {"email": "name.surname@private.net",
+            "label": "",
+            "name": "Name Surname",
+            "organization": ""}],
+        "name": "Private",
+        "type": "imap"}},
     "folders": [
       {"accountId": "account2",
        "favorite": true,
