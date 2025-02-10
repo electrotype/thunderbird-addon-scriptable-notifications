@@ -1,5 +1,13 @@
 ## Scriptable Notifications - Thunderbird add-on
 
+### ! EXTENSION ARCHIVED !
+
+## It seems that the new mail event doesn't always work properly when using IMAP. This makes the extension unreliable. It's not easy to debug since the issue doesn't always occur.
+
+## Feel free to fork the latest version of the code if you have time to investigate and release a working version.
+
+---
+
 ### Introduction
 
 This Thunderbird add-on allows you to define an external script (bash, batch, python, etc.)
